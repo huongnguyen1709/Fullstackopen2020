@@ -58,7 +58,7 @@ const App = () => {
     const totalNumber = good + neutral + bad
 
     return (
-        <div>
+        <div style={{ marginLeft: '10px' }}>
             <h1>give feedback</h1>
 
             <Button handleClick={() => setGood(good + 1)} text="Good"></Button>
