@@ -6,7 +6,7 @@ const Statistics = (props) => {
 
     if (totalNumber !== 0) {
         const average = (good * 1 + neutral * 0 + bad * -1) / totalNumber
-        const positive = precise_round((good / totalNumber * 100), 1)
+        const positive = decimalRound((good / totalNumber * 100), 1)
         return (
             <div>
                 <h1>statistics</h1>
@@ -36,14 +36,11 @@ const Statistic = ({ text, value }) => {
     )
 }
 
-const precise_round = (num, dec) => {
-
+const decimalRound = (num, dec) => {
     if ((typeof num !== 'number') || (typeof dec !== 'number'))
         return false;
 
-    var num_sign = num >= 0 ? 1 : -1;
-
-    return (Math.round((num * Math.pow(10, dec)) + (num_sign * 0.0001)) / Math.pow(10, dec)).toFixed(dec);
+    return (Math.round((num * Math.pow(10, dec))) / Math.pow(10, dec)).toFixed(dec);
 }
 
 const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>
