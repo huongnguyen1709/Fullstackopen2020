@@ -16,6 +16,10 @@ const App = () => {
             })
     }, [])
 
+    const onHandleClick = (countryName) => {
+        setFilterName(countryName)
+    }
+
     if (filterName && filterName !== '') {
         filterList = countries && countries.filter(country => {
             return country.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
@@ -46,7 +50,12 @@ const App = () => {
         }
         else {
             return filterList && filterList.map(country => {
-                return <p key={country.name}>{country.name}</p>
+                return (
+                    <div key={country.name}>
+                        <p style={{ display: 'inline-block' }}>{country.name}</p>
+                        &nbsp; <button onClick={() => onHandleClick(country.name)}>show</button>
+                    </div>
+                )
             })
         }
     }
