@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import { getAll, create, Delete, update } from './services/users'
 
 const Filter = ({ filterName, onHandleChange }) => {
     return (
@@ -35,12 +35,14 @@ const PersonForm = (props) => {
     )
 }
 
-const Persons = ({ persons }) => {
+const Persons = (props) => {
+    const { persons } = props
     return (
-        persons && persons.map((person, index) => {
+        persons && persons.map(person => {
             return (
-                <div key={index}>
-                    <p>{person.name} &nbsp; {person.number} </p>
+                <div key={person.id}>
+                    <p style={{ display: 'inline-block' }}>{person.name} &nbsp; {person.number} </p> &nbsp;
+                    <button onClick={() => props.onDelete(person.id, person.name)}>delete</button>
                 </div>
             )
         })
@@ -54,27 +56,70 @@ const App = () => {
     const [filterName, setFilterName] = useState('')
 
     useEffect(() => {
-        console.log('effect')
-        axios
-            .get('http://localhost:3001/persons')
+        getAll()
             .then(response => {
-                console.log('promise fulfilled')
                 setPersons(response.data)
+            })
+            .catch(err => {
+                console.log(err)
             })
     }, [])
 
-    const onHandleSubmit = e => {
+    const addNew = e => {
         e.preventDefault()
         const isChecked = persons.every(person => person.name.toLowerCase() !== newName)
+        const newUser = { name: newName, number: newNumber }
         if (isChecked) {
-            setPersons([
-                ...persons,
-                { name: newName, number: newNumber }
-            ])
-            setNewName('')
-            setNewNumber('')
+            create(newUser)
+                .then(res => {
+                    setPersons(persons.concat(res.data))
+                    setNewName('')
+                    setNewNumber('')
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        } else {
+            const index = persons.findIndex(person => person.name.toLowerCase() === newName)
+            const id = persons[index].id
+            const name = persons[index].name
+            if (window.confirm(`${name} is already added to phonebook, replace the old number with a new one ?`)) {
+                onUpdate(id, newUser)
+            }
         }
-        return isChecked ? null : window.alert(`${newName} is already added to phonebook`)
+    }
+
+    const onDelete = (objectID, name) => {
+        if (window.confirm(`Delete ${name} ?`)) {
+            Delete(objectID)
+                .then(res => {
+                    getAll()
+                        .then(response => {
+                            setPersons(response.data)
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+    }
+
+    const onUpdate = (objectID, newObject) => {
+        update(objectID, newObject)
+            .then(res => {
+                getAll()
+                    .then(response => {
+                        setPersons(response.data)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }).catch(err => {
+                console.log(err)
+            })
     }
 
     if (filterName && filterName !== '') {
@@ -93,7 +138,7 @@ const App = () => {
 
             <h3>Add a new</h3>
             <PersonForm
-                onHandleSubmit={onHandleSubmit}
+                onHandleSubmit={addNew}
                 newName={newName}
                 newNumber={newNumber}
                 onChangeName={e => setNewName(e.target.value)}
@@ -101,7 +146,7 @@ const App = () => {
             />
 
             <h2>Numbers</h2>
-            <Persons persons={persons} />
+            <Persons onDelete={onDelete} persons={persons} />
         </div>
     )
 }
