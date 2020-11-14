@@ -49,11 +49,25 @@ const Persons = (props) => {
     )
 }
 
+const Notification = ({ error, message }) => {
+    if (message === null) {
+        return null
+    }
+
+    return (
+        <div className={error ? 'error message' : 'success message'}>
+            {message}
+        </div>
+    )
+}
+
 const App = () => {
     var [persons, setPersons] = useState([])
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filterName, setFilterName] = useState('')
+    const [message, setMessage] = useState(null)
+    const [error, setError] = useState(false)
 
     useEffect(() => {
         getAll()
@@ -75,6 +89,11 @@ const App = () => {
                     setPersons(persons.concat(res.data))
                     setNewName('')
                     setNewNumber('')
+
+                    setMessage(`Added ${newName}`)
+                    setTimeout(() => {
+                        setMessage(null)
+                    }, 5000)
                 })
                 .catch(err => {
                     console.log(err)
@@ -117,9 +136,27 @@ const App = () => {
                     .catch(err => {
                         console.log(err)
                     })
-            }).catch(err => {
-                console.log(err)
             })
+            .catch(err => {
+                console.log(err)
+                setError(true)
+                setMessage(`Information of ${newObject.name} has already been removed from server`)
+                setTimeout(() => {
+                    setMessage(null)
+                }, 5000)
+            })
+            .then(() => {
+                getAll()
+                    .then(response => {
+                        setPersons(response.data)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                setNewName('')
+                setNewNumber('')
+            }
+            )
     }
 
     if (filterName && filterName !== '') {
@@ -131,6 +168,7 @@ const App = () => {
     return (
         <div style={{ marginLeft: '10px', fontSize: '20px' }}>
             <h2>Phonebook</h2>
+            <Notification error={error} message={message} />
             <Filter
                 filterName={filterName}
                 onHandleChange={e => setFilterName(e.target.value)}
