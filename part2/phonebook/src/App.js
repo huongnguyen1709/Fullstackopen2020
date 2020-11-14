@@ -1,65 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { getAll, create, Delete, update } from './services/users'
-
-const Filter = ({ filterName, onHandleChange }) => {
-    return (
-        <div style={{ marginBottom: '20px' }}>
-            filter shown with: <input
-                type='text'
-                value={filterName}
-                onChange={onHandleChange} />
-        </div>
-    )
-}
-
-const PersonForm = (props) => {
-    const { onHandleSubmit, newName, newNumber, onChangeName, onChangeNumber } = props
-    return (
-        <form onSubmit={onHandleSubmit}>
-            <div style={{ marginBottom: '20px' }}>
-                name: <input
-                    type='text'
-                    value={newName}
-                    onChange={onChangeName} />
-            </div>
-            <div style={{ marginBottom: '20px' }}>
-                number: <input
-                    type='tel'
-                    value={newNumber}
-                    onChange={onChangeNumber} />
-            </div>
-            <div>
-                <button type="submit">add</button>
-            </div>
-        </form>
-    )
-}
-
-const Persons = (props) => {
-    const { persons } = props
-    return (
-        persons && persons.map(person => {
-            return (
-                <div key={person.id}>
-                    <p style={{ display: 'inline-block' }}>{person.name} &nbsp; {person.number} </p> &nbsp;
-                    <button onClick={() => props.onDelete(person.id, person.name)}>delete</button>
-                </div>
-            )
-        })
-    )
-}
-
-const Notification = ({ error, message }) => {
-    if (message === null) {
-        return null
-    }
-
-    return (
-        <div className={error ? 'error message' : 'success message'}>
-            {message}
-        </div>
-    )
-}
+import Filter from './components/Filter'
+import { getAll, create, Delete, update } from './services/persons'
+import Notification from './components/Notification'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
     var [persons, setPersons] = useState([])
