@@ -25,7 +25,7 @@ const App = () => {
 
     const addNew = e => {
         e.preventDefault()
-        const isChecked = persons.every(person => person.name.toLowerCase() !== newName)
+        const isChecked = persons.every(person => person.name.toLowerCase() !== newName.toLowerCase())
         const newUser = { name: newName, number: newNumber }
         if (isChecked) {
             create(newUser)
