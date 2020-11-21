@@ -30,7 +30,7 @@ const App = () => {
         if (isChecked) {
             create(newUser)
                 .then(res => {
-                    setPersons(persons.concat(res.data))
+                    setPersons(res.data)
                     setNewName('')
                     setNewNumber('')
 
@@ -53,9 +53,10 @@ const App = () => {
     }
 
     const onDelete = (objectID, name) => {
+        console.log(objectID)
         if (window.confirm(`Delete ${name} ?`)) {
             Delete(objectID)
-                .then(res => {
+                .then(response => {
                     getAll()
                         .then(response => {
                             setPersons(response.data)

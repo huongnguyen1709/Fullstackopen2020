@@ -1,10 +1,12 @@
 const express = require('express')
-const morgan = require('morgan');
+const morgan = require('morgan')
+const cors = require('cors')
 
 const app = express()
 
 app.use(express.json())
 app.use(morgan('tiny'))
+app.use(cors())
 
 morgan.token('body', (req, res) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :req[content-length] - :response-time ms :body'));
@@ -34,13 +36,7 @@ let persons = [
 
 //generates random id;
 let guid = () => {
-    let s4 = () => {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    }
-    //return id of format 'aaaaaaaa'-'aaaa'-'aaaa'-'aaaa'-'aaaaaaaaaaaa'
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    return Math.floor(Math.random() * Date.now())
 }
 
 app.get('/api/persons', (request, response) => {
@@ -67,7 +63,7 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    persons = persons.filter(person => person.id !== id)
+    persons = persons && persons.filter(person => person.id !== id)
 
     response.status(204).end()
 })
