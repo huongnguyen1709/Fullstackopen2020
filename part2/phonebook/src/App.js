@@ -30,7 +30,7 @@ const App = () => {
         if (isChecked) {
             create(newUser)
                 .then(res => {
-                    setPersons(res.data)
+                    setPersons([...res.data])
                     setNewName('')
                     setNewNumber('')
 

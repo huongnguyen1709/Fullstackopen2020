@@ -12,6 +12,7 @@ app.use(express.static('build'))
 morgan.token('body', (req, res) => JSON.stringify(req.body));
 app.use(morgan(':method :url :status :req[content-length] - :response-time ms :body'));
 
+let people = []
 
 // let persons = [
 //     {
@@ -43,16 +44,21 @@ let guid = () => {
 
 app.get('/api/persons', (request, response) => {
     Person.find({}).then(persons => {
+        people = persons.map(person => person)
+        console.log(typeof persons)
+        console.log(persons)
+        console.log('people are', people)
+        console.log(typeof people)
         response.json(persons)
     })
 })
 
-app.get('/info', (request, response) => {
-    response.send(`
-        <h4>Phonebook has info for ${persons.length} people</h4>
-        <h4>${new Date()}</h4>
-    `)
-})
+// app.get('/info', (request, response) => {
+//     response.send(`
+//         <h4>Phonebook has info for ${persons.length} people</h4>
+//         <h4>${new Date()}</h4>
+//     `)
+// })
 
 app.get('/api/persons/:id', (request, response) => {
     Person.findById(request.params.id).then(person => {
