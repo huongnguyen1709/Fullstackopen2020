@@ -14,33 +14,13 @@ app.use(morgan(':method :url :status :req[content-length] - :response-time ms :b
 
 let people = []
 
-// let persons = [
-//     {
-//         "name": "Arto Hellas",
-//         "number": "040-123456",
-//         "id": 1
-//     },
-//     {
-//         "name": "Ada Lovelace",
-//         "number": "39-44-5323523",
-//         "id": 2
-//     },
-//     {
-//         "name": "Dan Abramov",
-//         "number": "12-43-234345",
-//         "id": 3
-//     },
-//     {
-//         "name": "Mary Poppendieck",
-//         "number": "39-23-6423122",
-//         "id": 4
-//     }
-// ]
-
 //generates random id;
 let guid = () => {
     return Math.floor(Math.random() * Date.now())
 }
+
+console.log(typeof guid())
+console.log(guid())
 
 app.get('/api/persons', (request, response) => {
     Person.find({}).then(persons => {
@@ -53,33 +33,41 @@ app.get('/api/persons', (request, response) => {
     })
 })
 
-// app.get('/info', (request, response) => {
-//     response.send(`
-//         <h4>Phonebook has info for ${persons.length} people</h4>
-//         <h4>${new Date()}</h4>
-//     `)
-// })
+app.get('/info', (request, response) => {
+    response.send(`
+        <h4>Phonebook has info for ${people.length} people</h4>
+        <h4>${new Date()}</h4>
+    `)
+})
 
 app.get('/api/persons/:id', (request, response) => {
-    Person.findById(request.params.id).then(person => {
-        if (person) {
-            response.json(person)
-        } else {
-            response.status(404).end()
-        }
-    })
+    Person.findById(request.params.id)
+        .then(person => {
+            if (person) {
+                response.json(person)
+            } else {
+                response.status(404).end()
+            }
+        })
+        .catch(error => {
+            console.log(error)
+            response.status(500).end()
+        })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    persons = persons && persons.filter(person => person.id !== id)
-
-    response.status(204).end()
+    Person.findByIdAndRemove(request.params.id)
+        .then(result => {
+            response.status(204).end()
+        })
+        .catch(error => response.status(500).json({
+            err: error
+        }))
 })
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
-    const isCheck = persons.every(person => person.name.toLowerCase() !== body.name.toLowerCase())
+    const isCheck = people.every(person => person.name.toLowerCase() !== body.name.toLowerCase())
     console.log(isCheck)
 
     if (!body.name) {
@@ -95,7 +83,6 @@ app.post('/api/persons', (request, response) => {
             error: 'name must be unique'
         })
     }
-    console.log(typeof body.number)
 
     const person = new Person({
         name: body.name,
