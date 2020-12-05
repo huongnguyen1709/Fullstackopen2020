@@ -45,6 +45,7 @@ const App = () => {
         } else {
             const index = persons.findIndex(person => person.name.toLowerCase() === newName)
             const id = persons[index].id
+            console.log(typeof id)
             const name = persons[index].name
             if (window.confirm(`${name} is already added to phonebook, replace the old number with a new one ?`)) {
                 onUpdate(id, newUser)
@@ -53,7 +54,6 @@ const App = () => {
     }
 
     const onDelete = (objectID, name) => {
-        console.log(objectID)
         if (window.confirm(`Delete ${name} ?`)) {
             Delete(objectID)
                 .then(response => {
@@ -72,6 +72,7 @@ const App = () => {
     }
 
     const onUpdate = (objectID, newObject) => {
+        console.log(objectID)
         update(objectID, newObject)
             .then(res => {
                 getAll()

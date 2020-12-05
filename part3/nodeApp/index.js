@@ -19,17 +19,10 @@ let guid = () => {
     return Math.floor(Math.random() * Date.now())
 }
 
-console.log(typeof guid())
-console.log(guid())
-
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
     Person.find({})
         .then(persons => {
             people = persons.map(person => person)
-            console.log(typeof persons)
-            console.log(persons)
-            console.log('people are', people)
-            console.log(typeof people)
             response.json(persons)
         })
         .catch(error => next(error))
@@ -42,7 +35,7 @@ app.get('/info', (request, response) => {
     `)
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     Person.findById(request.params.id)
         .then(person => {
             if (person) {
@@ -54,7 +47,7 @@ app.get('/api/persons/:id', (request, response) => {
         .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
         .then(result => {
             response.status(204).end()
@@ -62,7 +55,7 @@ app.delete('/api/persons/:id', (request, response) => {
         .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
     const isCheck = people.every(person => person.name.toLowerCase() !== body.name.toLowerCase())
     console.log(isCheck)
@@ -93,6 +86,20 @@ app.post('/api/persons', (request, response) => {
         response.json(savedInfo)
     })
         .catch(error => next(error))
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+        .then(updatedPerson => {
+            response.json(updatedPerson)
+        })
+        .catch(error => console.log(error))
 })
 
 const unknownEndpoint = (request, response) => {
