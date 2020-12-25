@@ -26,7 +26,7 @@ const App = () => {
     const addNew = e => {
         e.preventDefault()
         const isChecked = persons.every(person => person.name.toLowerCase() !== newName.toLowerCase())
-        const newUser = { name: newName, number: Number(newNumber) }
+        const newUser = { name: newName, number: newNumber }
         if (isChecked) {
             create(newUser)
                 .then(res => {
@@ -39,13 +39,17 @@ const App = () => {
                         setMessage(null)
                     }, 5000)
                 })
-                .catch(err => {
-                    console.log(err)
+                .catch(error => {
+                    setError(true)
+                    setMessage(error.response.data.error)
+                    setTimeout(() => {
+                        setMessage(null)
+                        setError(false)
+                    }, 5000)
                 })
         } else {
             const index = persons.findIndex(person => person.name.toLowerCase() === newName)
             const id = persons[index].id
-            console.log(typeof id)
             const name = persons[index].name
             if (window.confirm(`${name} is already added to phonebook, replace the old number with a new one ?`)) {
                 onUpdate(id, newUser)
@@ -72,7 +76,6 @@ const App = () => {
     }
 
     const onUpdate = (objectID, newObject) => {
-        console.log(objectID)
         update(objectID, newObject)
             .then(res => {
                 getAll()
@@ -83,26 +86,19 @@ const App = () => {
                         console.log(err)
                     })
             })
-            .catch(err => {
-                console.log(err)
+            .catch(error => {
+                console.log(error)
+                console.log(error.response.data.error)
                 setError(true)
-                setMessage(`Information of ${newObject.name} has already been removed from server`)
+                setMessage(error.response.data.error)
                 setTimeout(() => {
                     setMessage(null)
+                    setError(false)
                 }, 5000)
             })
-            .then(() => {
-                getAll()
-                    .then(response => {
-                        setPersons(response.data)
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-                setNewName('')
-                setNewNumber('')
-            }
-            )
+
+        setNewName('')
+        setNewNumber('')
     }
 
     if (filterName && filterName !== '') {
