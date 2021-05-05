@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "A Lovely Life",
+    "title": "A Lovely Xiao Zhan",
     "author": "Huong Nguyen",
-    "url": "hckjdhkjfhdsjk",
-    "likes": 56
-}
+    "url": "djhjhjhsjda",
+    "likes": 10000
+}   
