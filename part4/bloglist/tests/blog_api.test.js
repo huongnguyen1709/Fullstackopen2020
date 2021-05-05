@@ -14,10 +14,10 @@ test('blog posts are returned as json', async () => {
 
 test('the unique identifier property of the blog posts named id is defined', async () => {
   jest.setTimeout(20000);
-  await api.get('/api/blogs'),
-    (request, response) => {
-      expect(response && response.every((blog) => blog && blog.id)).toBe(true);
-    };
+  const response = await api.get('/api/blogs');
+  expect(response.body && response.body.every((blog) => blog && blog.id)).toBe(
+    true
+  );
 });
 
 afterAll(() => {
