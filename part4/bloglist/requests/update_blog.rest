@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogs/608be2cf840a7c0ab07c89b3
+Content-Type: application/json
+
+{
+    "title": "A Lovely Blog",
+    "author": "Huong Nguyen",
+    "url": "dasdsadas",
+    "likes": 9878
+}   
