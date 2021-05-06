@@ -35,12 +35,19 @@ blogsRouter.post('/', (request, response, next) => {
     .catch((error) => next(error));
 });
 
-blogsRouter.delete('/:id', (request, response, next) => {
-  Blog.findByIdAndRemove(request.params.id)
-    .then(() => {
-      response.status(204).end();
-    })
-    .catch((error) => next(error));
+blogsRouter.delete('/:id', async (request, response, next) => {
+  try {
+    const blog = await Blog.findById(request.params.id);
+
+    if (!blog) {
+      return response.status(404).json({ msg: 'Post not found' });
+    }
+    await blog.remove();
+    response.json(blog);
+    return response.status(204).end();
+  } catch (error) {
+    next(error);
+  }
 });
 
 blogsRouter.put('/:id', (request, response, next) => {

@@ -2,7 +2,7 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    
+    "title": "A Lovely Wang Yibo",
     "author": "Huong Nguyen",
     "url": "dasdsadas",
     "likes": 9878
