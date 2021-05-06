@@ -4,6 +4,5 @@ Content-Type: application/json
 {
     "title": "A Lovely Wang Yibo Xiao Zhan",
     "author": "Huong Nguyen",
-    "url": "dasdsadas",
-    "likes": 100029
+    "url": "dasdsadas"
 }   

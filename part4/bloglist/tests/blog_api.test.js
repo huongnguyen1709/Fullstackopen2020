@@ -63,6 +63,30 @@ test('a valid blog can be added', async () => {
   expect(titles).toContain('A Lovely Novel');
 });
 
+test('the likes property is missing from the request, it will default to the value 0', async () => {
+  const newBlog = {
+    title: 'A Lovely Novel',
+    author: 'Huong Nguyen',
+    url: 'dasdsadas',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  const response = await api.get('/api/blogs');
+
+  const titles = response.body.map((r) => r.title);
+  const blog = response.body.find((r) => r.title === 'A Lovely Novel');
+  const likes = blog.likes;
+
+  expect(response.body).toHaveLength(initialBlogs.length + 1);
+  expect(titles).toContain('A Lovely Novel');
+  expect(likes).toBe(0);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });

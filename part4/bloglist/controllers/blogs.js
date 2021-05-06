@@ -23,7 +23,6 @@ blogsRouter.post('/', (request, response, next) => {
   const body = request.body;
   const blog = new Blog({
     ...body,
-    important: body.important || false,
     date: new Date(),
   });
 
