@@ -87,6 +87,15 @@ test('the likes property is missing from the request, it will default to the val
   expect(likes).toBe(0);
 });
 
+test('a new blog added with title and url properties is required', async () => {
+  const newBlog = {
+    author: 'Huong Nguyen',
+    like: 9798,
+  };
+
+  await api.post('/api/blogs').send(newBlog).expect(400);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
