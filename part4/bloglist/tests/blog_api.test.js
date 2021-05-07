@@ -87,7 +87,7 @@ test('the likes property is missing from the request, it will default to the val
   expect(likes).toBe(0);
 });
 
-test('a new blog added with title and url properties is required', async () => {
+test('if the title and url properties are missing from the request data, the backend responds to the request with the status code 400 Bad Request', async () => {
   const newBlog = {
     author: 'Huong Nguyen',
     like: 9798,
