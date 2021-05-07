@@ -2,8 +2,8 @@ POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
+    "username": "wscsdas",
     "blogs": [],
-    "username": "root",
-    "name": "Superuser",
-    "password": "salainen"
+    "name": "huongamy123",
+    "password": "sa"
 }
