@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYwOTU3ODI4MWY2OWQwMjExZGY0OThiMSIsImlhdCI6MTYyMDQwODQxN30.mbXjnYIgMT2uOomoK5tO-NLgKwNmqQUyt5bHW6wjzwk
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYwOTU3ODI4MWY2OWQwMjExZGY0OThiMSIsImlhdCI6MTYyMDQxMDI2MH0.lGW9fK4CWxLhnpkYMCU75KU_Ud27ETOYqZfxgDUxvnE
 
 {
     "title": "A Lovely Book",
