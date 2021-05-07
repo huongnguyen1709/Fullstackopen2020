@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYwOTU3ODI4MWY2OWQwMjExZGY0OThiMSIsImlhdCI6MTYyMDQwODQxN30.mbXjnYIgMT2uOomoK5tO-NLgKwNmqQUyt5bHW6wjzwk
 
 {
-    "title": "A Lovely Wang Yibo",
+    "title": "A Lovely Book",
     "author": "Huong Nguyen",
     "url": "dasdsadas",
-    "likes": 9878
+    "likes": 1656
 }   
