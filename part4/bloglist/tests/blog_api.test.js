@@ -54,7 +54,6 @@ test('the unique identifier property of the blog posts named id is defined', asy
 });
 
 test('a valid blog can be added with token authentication', async () => {
-  // làm await login với username + password, sau đó sẽ được response.body
   const userLogin = await api
     .post('/api/login')
     .send({
