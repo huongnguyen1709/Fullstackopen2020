@@ -3,6 +3,7 @@ const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 const initialBlogs = [
   {
@@ -18,6 +19,17 @@ const initialBlogs = [
     likes: 354,
   },
 ];
+
+const initialUsers = {
+  username: 'root',
+  blogs: [],
+  name: 'Amy',
+  password: 'salainen',
+};
+
+beforeAll(async () => {
+  const response = await api.post('/api/users').send(initialUsers);
+});
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -41,7 +53,18 @@ test('the unique identifier property of the blog posts named id is defined', asy
   );
 });
 
-test('a valid blog can be added', async () => {
+test('a valid blog can be added with token authentication', async () => {
+  // làm await login với username + password, sau đó sẽ được response.body
+  const userLogin = await api
+    .post('/api/login')
+    .send({
+      username: 'root',
+      password: 'salainen',
+    })
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  const token = userLogin.body.token;
   const newBlog = {
     title: 'A Lovely Novel',
     author: 'Huong Nguyen',
@@ -51,11 +74,14 @@ test('a valid blog can be added', async () => {
 
   await api
     .post('/api/blogs')
+    .set('Authorization', `bearer ${token}`)
     .send(newBlog)
     .expect(200)
     .expect('Content-Type', /application\/json/);
 
-  const response = await api.get('/api/blogs');
+  const response = await api
+    .get('/api/blogs')
+    .set('Authorization', `bearer ${token}`);
 
   const titles = response.body.map((r) => r.title);
 
@@ -94,6 +120,21 @@ test('if the title and url properties are missing from the request data, the bac
   };
 
   await api.post('/api/blogs').send(newBlog).expect(400);
+});
+
+test('adding a blog fails with the proper status code 401 Unauthorized if a token is not provided', async () => {
+  const newBlog = {
+    title: 'A Lovely Novel',
+    author: 'Huong Nguyen',
+    url: 'dasdsadas',
+    likes: 100029,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(401)
+    .expect('Content-Type', /application\/json/);
 });
 
 afterAll(() => {

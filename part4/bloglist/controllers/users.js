@@ -11,30 +11,25 @@ usersRouter.post(
       'Please enter a password with 3 or more characters'
     ).isLength({ min: 3 }),
   ],
-  async (request, response, next) => {
+  async (request, response) => {
     const errors = validationResult(request);
     console.log(errors);
     if (!errors.isEmpty()) {
-      console.log('hello');
       return response.status(400).json({ errors: errors.array() });
     }
-    try {
-      const body = request.body;
+    const body = request.body;
 
-      const saltRounds = 10;
-      const passwordHash = await bcrypt.hash(body.password, saltRounds);
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(body.password, saltRounds);
 
-      const user = new User({
-        username: body.username,
-        name: body.name,
-        passwordHash,
-      });
+    const user = new User({
+      username: body.username,
+      name: body.name,
+      passwordHash,
+    });
 
-      const savedUser = await user.save();
-      response.json(savedUser);
-    } catch (error) {
-      next(error);
-    }
+    const savedUser = await user.save();
+    response.json(savedUser);
   }
 );
 
