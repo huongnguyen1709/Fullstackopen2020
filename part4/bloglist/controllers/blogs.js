@@ -2,8 +2,15 @@ const blogsRouter = require('express').Router();
 const Blog = require('../models/blog');
 
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({});
-  response.json(blogs);
+  try {
+    const blogs = await Blog.find({}).populate('user', {
+      username: 1,
+      name: 1,
+    });
+    response.json(blogs);
+  } catch (error) {
+    next(error);
+  }
 });
 
 blogsRouter.get('/:id', (request, response, next) => {
@@ -46,8 +53,7 @@ blogsRouter.delete('/:id', async (request, response) => {
 
   if (blog.user.toString() !== userid.toString()) {
     return response.status(403).json({
-      msg:
-        'You do not have permission to delete this blog, only the author can delete it',
+      msg: 'You do not have permission to delete this blog, only the author can delete it',
     });
   }
 
