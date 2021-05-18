@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import loginService from '../services/login';
+import blogService from '../services/blogs';
 
-const Login = ({ userLogin }) => {
+const Login = ({ onUserLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
@@ -17,7 +18,8 @@ const Login = ({ userLogin }) => {
 
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
 
-      userLogin(user);
+      onUserLogin(user);
+      blogService.setToken(user.token);
       setUsername('');
       setPassword('');
     } catch (exception) {
@@ -48,7 +50,7 @@ const Login = ({ userLogin }) => {
       <form style={formStyle} onSubmit={(e) => handleLogin(e)}>
         <h1>log in to application</h1>
 
-        <div style={inputStyle} className='input-field'>
+        <div style={inputStyle}>
           <label htmlFor='username'>username</label>
           &nbsp;
           <input
@@ -61,7 +63,7 @@ const Login = ({ userLogin }) => {
           />
         </div>
 
-        <div style={inputStyle} className='input-field'>
+        <div style={inputStyle}>
           <label htmlFor='password'>password</label> &nbsp;
           <input
             style={fontSize}
@@ -74,7 +76,7 @@ const Login = ({ userLogin }) => {
           />
         </div>
 
-        <div style={inputStyle} className='input-field'>
+        <div style={inputStyle}>
           <button>login</button>
           <div className='red-text center'></div>
         </div>

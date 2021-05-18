@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AddBlog from './components/AddBlog';
 import Blog from './components/Blog';
 import Login from './components/Login';
 import blogService from './services/blogs';
@@ -6,6 +7,14 @@ import blogService from './services/blogs';
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
+
+  const marginLeft = {
+    marginLeft: '20px',
+  };
+
+  const inlineBlock = {
+    display: 'inline-block',
+  };
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -20,10 +29,10 @@ const App = () => {
     }
   }, []);
 
-  const getUser = (userLogin) => {
-    if (userLogin) {
-      setUser(userLogin);
-      blogService.setToken(userLogin.token);
+  const getUser = (userLoggedin) => {
+    if (userLoggedin) {
+      setUser(userLoggedin);
+      blogService.setToken(userLoggedin.token);
     }
   };
 
@@ -33,21 +42,18 @@ const App = () => {
     blogService.setToken(null);
   };
 
-  const marginLeft = {
-    marginLeft: '20px',
+  const getNewBlog = (newBlog) => {
+    setBlogs(blogs.concat(newBlog));
   };
 
-  const inlineBlock = {
-    display: 'inline-block',
-  };
-  console.log(window.localStorage);
-  if (user === null) return <Login userLogin={getUser} />;
+  if (user === null) return <Login onUserLogin={getUser} />;
 
   return (
     <div style={marginLeft}>
       <h2>blogs</h2>
       <p style={inlineBlock}>{user.name} logged in</p> &nbsp;
       <button onClick={handleLogout}>logout</button>
+      <AddBlog onAddNewBlog={getNewBlog} />
       {blogs && blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
     </div>
   );
