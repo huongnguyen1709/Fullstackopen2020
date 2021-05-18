@@ -7,6 +7,35 @@ const Login = ({ onUserLogin }) => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
 
+  const inputStyle = {
+    marginBottom: '20px',
+    fontSize: '20px',
+  };
+
+  const formStyle = {
+    width: '50vw',
+    margin: '0 auto',
+  };
+
+  const fontSize = {
+    fontSize: '15px',
+    padding: '0 5px',
+  };
+
+  const error = {
+    display: errorMessage === null ? 'none' : 'flex',
+    width: '90%',
+    backgroundColor: 'lightgrey',
+    border: '3.5px solid red',
+    borderRadius: '5px',
+    fontSize: '20px',
+    padding: '10px',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    color: 'red',
+    marginBottom: '20px',
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -23,32 +52,19 @@ const Login = ({ onUserLogin }) => {
       setUsername('');
       setPassword('');
     } catch (exception) {
-      setErrorMessage('Wrong credentials');
+      setErrorMessage('Wrong username or password');
       setTimeout(() => {
         setErrorMessage(null);
-      }, 5000);
+      }, 4000);
     }
-  };
-
-  const inputStyle = {
-    marginBottom: '20px',
-    fontSize: '20px',
-  };
-
-  const formStyle = {
-    width: '50vw',
-    margin: '0 auto',
-  };
-
-  const fontSize = {
-    fontSize: '15px',
-    padding: '0 5px',
   };
 
   return (
     <div>
       <form style={formStyle} onSubmit={(e) => handleLogin(e)}>
         <h1>log in to application</h1>
+
+        <div style={error}>{errorMessage}</div>
 
         <div style={inputStyle}>
           <label htmlFor='username'>username</label>

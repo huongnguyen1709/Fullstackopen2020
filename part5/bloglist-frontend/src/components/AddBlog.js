@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import blogService from '../services/blogs';
 
-const AddBlog = ({ onAddNewBlog }) => {
+const AddBlog = ({ onAddNewBlog, onMessage }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
@@ -26,6 +26,7 @@ const AddBlog = ({ onAddNewBlog }) => {
       });
 
       onAddNewBlog(newBlog);
+      onMessage(`a new blog ${title} by ${author} added`);
 
       setTitle('');
       setAuthor('');
