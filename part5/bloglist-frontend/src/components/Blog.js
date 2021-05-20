@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import blogs from '../services/blogs';
 import blogService from '../services/blogs';
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleChange, user }) => {
   const [showDetail, setShowDetail] = useState(false);
   const [likes, setLikes] = useState(blog.likes);
 
@@ -22,6 +22,14 @@ const Blog = ({ blog }) => {
     display: 'inline-block',
   };
 
+  const buttonStyle = {
+    margin: '5px',
+    backgroundColor: 'blue',
+    backgroundColor: '#318CE7',
+    borderRadius: '5px',
+    border: 'none',
+  };
+
   const addLike = async () => {
     const response = await blogService.update({
       ...blog,
@@ -29,6 +37,14 @@ const Blog = ({ blog }) => {
       likes: likes + 1,
     });
     setLikes(response.likes);
+  };
+
+  const handleDelete = async () => {
+    console.log(blog.id);
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      await blogService.deleteBlog(blog.id);
+      handleChange();
+    }
   };
 
   return (
@@ -42,6 +58,9 @@ const Blog = ({ blog }) => {
         <div style={inlineBlock}>likes {likes}</div> &nbsp;
         <button onClick={addLike}>like</button>
         <div>{blog.author}</div>
+        <button style={buttonStyle} onClick={handleDelete}>
+          remove
+        </button>
       </div>
     </div>
   );

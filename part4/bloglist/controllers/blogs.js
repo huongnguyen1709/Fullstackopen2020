@@ -45,7 +45,9 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
   const user = request.user;
+  console.log(user);
   const userid = user._id;
+  console.log(userid);
   const blog = await Blog.findById(request.params.id);
 
   if (!blog) {
@@ -58,9 +60,13 @@ blogsRouter.delete('/:id', async (request, response) => {
     });
   }
 
-  user.blogs = user.blogs.filter((blogId) => {
-    blogId !== blog._id;
+  var userBlogs = user.blogs;
+
+  userBlogs = userBlogs.filter((blogId) => {
+    return blogId.toString() !== blog._id.toString();
   });
+
+  user.blogs = userBlogs;
 
   await user.save();
   await blog.remove();

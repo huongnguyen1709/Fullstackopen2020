@@ -1,14 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AddBlog from './components/AddBlog';
 import Blog from './components/Blog';
-import Login from './components/Login';
+import LoginForm from './components/LoginForm';
+import Notification from './components/Notification';
 import blogService from './services/blogs';
+import loginService from './services/login';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
+  const [newBlog, setNewBlog] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [message, setMessage] = useState('');
-  const [createVisible, setCreateVisible] = useState(false);
+  const [loginVisible, setLoginVisible] = useState(false);
+
+  const blogFormRef = useRef();
+  const [isChange, setIsChange] = useState(false);
 
   const marginLeft = {
     marginLeft: '20px',
@@ -18,35 +26,14 @@ const App = () => {
     marginTop: '20px',
   };
 
-  const inlineBlock = {
-    display: 'inline-block',
-  };
-
-  const successfull = {
-    display: message === '' ? 'none' : 'flex',
-    width: '90%',
-    backgroundColor: 'lightgrey',
-    border: '3.5px solid green',
-    borderRadius: '5px',
-    fontSize: '20px',
-    padding: '10px',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    color: 'green',
-  };
-
-  const visible = {
-    display: createVisible ? '' : 'none',
-  };
-
   useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      blogs = blogs.sort(function (a, b) {
+    blogService.getAll().then((initialBlogs) => {
+      initialBlogs = initialBlogs.sort(function (a, b) {
         return b.likes - a.likes;
       });
-      setBlogs(blogs);
+      setBlogs(initialBlogs);
     });
-  }, [user]);
+  }, [user, isChange]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
@@ -56,6 +43,52 @@ const App = () => {
       blogService.setToken(user.token);
     }
   }, []);
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      const user = await loginService.login({
+        username,
+        password,
+      });
+
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
+      blogService.setToken(user.token);
+      setUser(user);
+      setUsername('');
+      setPassword('');
+    } catch (exception) {
+      setErrorMessage('Wrong credentials');
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
+  };
+
+  const loginForm = () => {
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' };
+    const showWhenVisible = { display: loginVisible ? '' : 'none' };
+
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>log in</button>
+        </div>
+        <div style={showWhenVisible}>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+          <button onClick={() => setLoginVisible(false)}>cancel</button>
+        </div>
+      </div>
+    );
+  };
+
+  const blogForm = () => {};
 
   const getUserLoggedin = (userLoggedin) => {
     if (userLoggedin) {
@@ -75,43 +108,31 @@ const App = () => {
     setBlogs(blogs.concat(newBlog));
   };
 
-  const getMessage = (newMessage) => {
-    setMessage(newMessage);
-    setTimeout(() => {
-      setMessage('');
-    }, 4000);
-  };
-
-  const handleCloseForm = () => {
-    setCreateVisible(false);
-  };
-
   console.log(blogs);
-
-  if (user === null) return <Login onUserLogin={getUserLoggedin} />;
 
   return (
     <div style={marginLeft}>
       <h2>blogs</h2>
-      <div style={successfull}>{message}</div>
-      <div>
-        <p style={inlineBlock}>{user.name} logged in</p> &nbsp;
-        <button onClick={handleLogout}>logout</button>
-      </div>
-
-      <button onClick={() => setCreateVisible(true)}>new note</button>
-      <AddBlog
-        createVisible={createVisible}
-        onMessage={getMessage}
-        onAddNewBlog={getNewBlog}
-        onCloseForm={handleCloseForm}
-      />
-      <button style={visible} onClick={() => setCreateVisible(false)}>
-        Cancel
-      </button>
+      <Notification message={errorMessage} />
+      {user === null ? (
+        loginForm()
+      ) : (
+        <div>
+          <p>{user.name} logged-in</p>
+          {blogForm()}
+        </div>
+      )}
 
       <div style={marginTop}>
-        {blogs && blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
+        {blogs &&
+          blogs.map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              user={user}
+              handleChange={() => setIsChange(!isChange)}
+            />
+          ))}
       </div>
     </div>
   );
