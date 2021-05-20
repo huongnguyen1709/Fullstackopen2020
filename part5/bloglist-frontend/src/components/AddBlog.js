@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import blogService from '../services/blogs';
 
-const AddBlog = ({ onAddNewBlog, onMessage }) => {
+const AddBlog = ({ onAddNewBlog, onMessage, createVisible, onCloseForm }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
@@ -12,7 +12,8 @@ const AddBlog = ({ onAddNewBlog, onMessage }) => {
   };
 
   const form = {
-    marginBottom: '30px',
+    marginBottom: '20px',
+    display: createVisible ? '' : 'none',
   };
 
   const onCreate = async (e) => {
@@ -31,6 +32,7 @@ const AddBlog = ({ onAddNewBlog, onMessage }) => {
       setTitle('');
       setAuthor('');
       setUrl('');
+      onCloseForm();
     } catch (exception) {
       setErrorMessage('Wrong credentials');
       setTimeout(() => {
@@ -77,10 +79,7 @@ const AddBlog = ({ onAddNewBlog, onMessage }) => {
           />
         </div>
 
-        <div style={inputStyle}>
-          <button>Create</button>
-          <div className='red-text center'></div>
-        </div>
+        <button>Create</button>
       </form>
     </div>
   );

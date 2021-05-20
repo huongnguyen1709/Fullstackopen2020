@@ -8,9 +8,14 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState('');
+  const [createVisible, setCreateVisible] = useState(false);
 
   const marginLeft = {
     marginLeft: '20px',
+  };
+
+  const marginTop = {
+    marginTop: '20px',
   };
 
   const inlineBlock = {
@@ -28,6 +33,10 @@ const App = () => {
     flexDirection: 'column',
     justifyContent: 'center',
     color: 'green',
+  };
+
+  const visible = {
+    display: createVisible ? '' : 'none',
   };
 
   useEffect(() => {
@@ -68,6 +77,10 @@ const App = () => {
     }, 4000);
   };
 
+  const handleCloseForm = () => {
+    setCreateVisible(false);
+  };
+
   console.log(blogs);
 
   if (user === null) return <Login onUserLogin={getUserLoggedin} />;
@@ -76,10 +89,25 @@ const App = () => {
     <div style={marginLeft}>
       <h2>blogs</h2>
       <div style={successfull}>{message}</div>
-      <p style={inlineBlock}>{user.name} logged in</p> &nbsp;
-      <button onClick={handleLogout}>logout</button>
-      <AddBlog onMessage={getMessage} onAddNewBlog={getNewBlog} />
-      {blogs && blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
+      <div>
+        <p style={inlineBlock}>{user.name} logged in</p> &nbsp;
+        <button onClick={handleLogout}>logout</button>
+      </div>
+
+      <button onClick={() => setCreateVisible(true)}>new note</button>
+      <AddBlog
+        createVisible={createVisible}
+        onMessage={getMessage}
+        onAddNewBlog={getNewBlog}
+        onCloseForm={handleCloseForm}
+      />
+      <button style={visible} onClick={() => setCreateVisible(false)}>
+        Cancel
+      </button>
+
+      <div style={marginTop}>
+        {blogs && blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
+      </div>
     </div>
   );
 };
