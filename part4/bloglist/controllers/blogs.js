@@ -7,6 +7,7 @@ blogsRouter.get('/', async (request, response) => {
       username: 1,
       name: 1,
     });
+
     response.json(blogs);
   } catch (error) {
     next(error);
