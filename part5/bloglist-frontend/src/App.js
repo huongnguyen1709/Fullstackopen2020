@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import AddBlog from './components/BlogForm';
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
@@ -96,13 +95,14 @@ const App = () => {
   };
 
   const addBlog = (newBlog) => {
+    blogFormRef.current.toggleVisibility();
     blogService.create(newBlog).then((returnedBlog) => {
       setBlogs(blogs.concat(returnedBlog));
     });
   };
 
   const blogForm = () => (
-    <Togglable buttonLabel='new blog'>
+    <Togglable buttonLabel='new blog' ref={blogFormRef}>
       <BlogForm
         createBlog={addBlog}
         message={(message) => setMessage(message)}

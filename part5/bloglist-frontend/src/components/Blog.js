@@ -24,7 +24,6 @@ const Blog = ({ blog, handleChange, user }) => {
 
   const buttonStyle = {
     margin: '5px',
-    backgroundColor: 'blue',
     backgroundColor: '#318CE7',
     borderRadius: '5px',
     border: 'none',

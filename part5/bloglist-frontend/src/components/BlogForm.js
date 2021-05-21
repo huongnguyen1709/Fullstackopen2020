@@ -4,7 +4,6 @@ const BlogForm = ({ createBlog, message }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
-  const [errorMessage, setErrorMessage] = useState(null);
 
   const marginTop = {
     marginTop: '10px',
