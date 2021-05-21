@@ -24,20 +24,6 @@ const LoginForm = ({
     padding: '0 5px',
   };
 
-  // const error = {
-  //   display: errorMessage === null ? 'none' : 'flex',
-  //   width: '90%',
-  //   backgroundColor: 'lightgrey',
-  //   border: '3.5px solid red',
-  //   borderRadius: '5px',
-  //   fontSize: '20px',
-  //   padding: '10px',
-  //   flexDirection: 'column',
-  //   justifyContent: 'center',
-  //   color: 'red',
-  //   marginBottom: '20px',
-  // };
-
   return (
     <div>
       <form onSubmit={handleSubmit}>

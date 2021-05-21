@@ -10,13 +10,11 @@ import Togglable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [newBlog, setNewBlog] = useState('');
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [loginVisible, setLoginVisible] = useState(false);
-  const [blogFormVisible, setBlogFormVisible] = useState(false);
 
   const blogFormRef = useRef();
   const [isChange, setIsChange] = useState(false);
@@ -59,43 +57,41 @@ const App = () => {
         password,
       });
 
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
-      blogService.setToken(user.token);
-      setUser(user);
-      setUsername('');
-      setPassword('');
+      if (user) {
+        window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
+        blogService.setToken(user.token);
+        setUser(user);
+        setUsername('');
+        setPassword('');
+      } else {
+        setMessage('Wrong username or password');
+        setError(true);
+        setTimeout(() => {
+          setMessage(null);
+          setError(false);
+        }, 5000);
+      }
     } catch (exception) {
-      setErrorMessage('Wrong credentials');
+      setMessage('Wrong credentials');
+      setError(true);
       setTimeout(() => {
-        setErrorMessage(null);
+        setMessage(null);
+        setError(false);
       }, 5000);
     }
   };
 
   const loginForm = () => {
-    const hideWhenVisible = { display: loginVisible ? 'none' : '' };
-    const showWhenVisible = { display: loginVisible ? '' : 'none' };
-
     return (
-      <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>log in</button>
-        </div>
-        <div style={showWhenVisible}>
-          <Togglable buttonLabel='login'>
-            <LoginForm
-              username={username}
-              password={password}
-              handleUsernameChange={({ target }) => setUsername(target.value)}
-              handlePasswordChange={({ target }) => setPassword(target.value)}
-              handleSubmit={handleLogin}
-            />
-          </Togglable>
-          <button style={marginTop} onClick={() => setLoginVisible(false)}>
-            cancel
-          </button>
-        </div>
-      </div>
+      <Togglable buttonLabel='log in'>
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleSubmit={handleLogin}
+        />
+      </Togglable>
     );
   };
 
@@ -107,16 +103,12 @@ const App = () => {
 
   const blogForm = () => (
     <Togglable buttonLabel='new blog'>
-      <BlogForm createBlog={addBlog} />
+      <BlogForm
+        createBlog={addBlog}
+        message={(message) => setMessage(message)}
+      />
     </Togglable>
   );
-
-  const getUserLoggedin = (userLoggedin) => {
-    if (userLoggedin) {
-      setUser(userLoggedin);
-      blogService.setToken(userLoggedin.token);
-    }
-  };
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser');
@@ -125,16 +117,12 @@ const App = () => {
     blogService.setToken(null);
   };
 
-  const getNewBlog = (newBlog) => {
-    setBlogs(blogs.concat(newBlog));
-  };
-
   console.log(blogs);
 
   return (
     <div style={marginLeft}>
       <h2>blogs</h2>
-      <Notification message={errorMessage} />
+      <Notification notification={message} error={error} />
       {user === null ? (
         loginForm()
       ) : (
