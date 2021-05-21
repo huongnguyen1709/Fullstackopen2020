@@ -40,7 +40,7 @@ const LoginForm = ({
 
   return (
     <div>
-      <form style={formStyle} onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <h1>log in to application</h1>
 
         <div>

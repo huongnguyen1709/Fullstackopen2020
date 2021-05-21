@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import AddBlog from './components/AddBlog';
+import AddBlog from './components/BlogForm';
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
+import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import blogService from './services/blogs';
 import loginService from './services/login';
+import Togglable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -14,6 +16,7 @@ const App = () => {
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
   const [loginVisible, setLoginVisible] = useState(false);
+  const [blogFormVisible, setBlogFormVisible] = useState(false);
 
   const blogFormRef = useRef();
   const [isChange, setIsChange] = useState(false);
@@ -24,6 +27,10 @@ const App = () => {
 
   const marginTop = {
     marginTop: '20px',
+  };
+
+  const inlineBlock = {
+    display: 'inline-block',
   };
 
   useEffect(() => {
@@ -75,20 +82,34 @@ const App = () => {
           <button onClick={() => setLoginVisible(true)}>log in</button>
         </div>
         <div style={showWhenVisible}>
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}
-          />
-          <button onClick={() => setLoginVisible(false)}>cancel</button>
+          <Togglable buttonLabel='login'>
+            <LoginForm
+              username={username}
+              password={password}
+              handleUsernameChange={({ target }) => setUsername(target.value)}
+              handlePasswordChange={({ target }) => setPassword(target.value)}
+              handleSubmit={handleLogin}
+            />
+          </Togglable>
+          <button style={marginTop} onClick={() => setLoginVisible(false)}>
+            cancel
+          </button>
         </div>
       </div>
     );
   };
 
-  const blogForm = () => {};
+  const addBlog = (newBlog) => {
+    blogService.create(newBlog).then((returnedBlog) => {
+      setBlogs(blogs.concat(returnedBlog));
+    });
+  };
+
+  const blogForm = () => (
+    <Togglable buttonLabel='new blog'>
+      <BlogForm createBlog={addBlog} />
+    </Togglable>
+  );
 
   const getUserLoggedin = (userLoggedin) => {
     if (userLoggedin) {
@@ -117,23 +138,23 @@ const App = () => {
       {user === null ? (
         loginForm()
       ) : (
-        <div>
-          <p>{user.name} logged-in</p>
+        <div style={marginTop}>
+          <p style={inlineBlock}>{user.name} logged-in</p> &nbsp;
+          <button onClick={handleLogout}>logout</button>
           {blogForm()}
+          <div style={marginTop}>
+            {blogs &&
+              blogs.map((blog) => (
+                <Blog
+                  key={blog.id}
+                  blog={blog}
+                  user={user}
+                  handleChange={() => setIsChange(!isChange)}
+                />
+              ))}
+          </div>
         </div>
       )}
-
-      <div style={marginTop}>
-        {blogs &&
-          blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              user={user}
-              handleChange={() => setIsChange(!isChange)}
-            />
-          ))}
-      </div>
     </div>
   );
 };
