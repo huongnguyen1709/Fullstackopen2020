@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const Notification = ({ notification, error }) => {
   const notiStyle = {
@@ -13,8 +13,8 @@ const Notification = ({ notification, error }) => {
     justifyContent: 'center',
     color: error ? 'red' : 'green',
     marginBottom: '20px',
-  };
-  return <div style={notiStyle}>{notification}</div>;
-};
+  }
+  return <div style={notiStyle}>{notification}</div>
+}
 
-export default Notification;
+export default Notification

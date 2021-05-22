@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import blogs from '../services/blogs';
 import blogService from '../services/blogs';
 
-const Blog = ({ blog, handleChange, user }) => {
+const Blog = ({ blog, handleChange }) => {
   const [showDetail, setShowDetail] = useState(false);
   const [likes, setLikes] = useState(blog.likes);
+  const [userId, setUserId] = useState(null);
 
   const blogStyle = {
     paddingTop: 10,
@@ -46,6 +46,24 @@ const Blog = ({ blog, handleChange, user }) => {
     }
   };
 
+  const authorAction = () => {
+    const blogId = blog.user.id;
+    blogService
+      .getUserId()
+      .then((userId) => {
+        setUserId(userId);
+      })
+      .catch((err) => console.log(err));
+
+    if (userId === blogId) {
+      return (
+        <button style={buttonStyle} onClick={handleDelete}>
+          remove
+        </button>
+      );
+    } else return null;
+  };
+
   return (
     <div style={blogStyle}>
       {blog.title} &nbsp;
@@ -57,9 +75,7 @@ const Blog = ({ blog, handleChange, user }) => {
         <div style={inlineBlock}>likes {likes}</div> &nbsp;
         <button onClick={addLike}>like</button>
         <div>{blog.author}</div>
-        <button style={buttonStyle} onClick={handleDelete}>
-          remove
-        </button>
+        {authorAction()}
       </div>
     </div>
   );

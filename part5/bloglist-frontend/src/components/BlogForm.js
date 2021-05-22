@@ -1,32 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 const BlogForm = ({ createBlog, message }) => {
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   const marginTop = {
     marginTop: '10px',
-  };
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     createBlog({
       title,
       author,
       url,
-    });
+    })
 
-    setTitle('');
-    setAuthor('');
-    setUrl('');
+    setTitle('')
+    setAuthor('')
+    setUrl('')
 
-    message(`a new blog ${title} by ${author} added`);
+    message(`a new blog ${title} by ${author} added`)
     setTimeout(() => {
-      message(null);
-    }, 5000);
-  };
+      message(null)
+    }, 5000)
+  }
 
   return (
     <div>
@@ -56,7 +56,7 @@ const BlogForm = ({ createBlog, message }) => {
         </button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default BlogForm;
+export default BlogForm

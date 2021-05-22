@@ -1,4 +1,5 @@
 import axios from 'axios';
+import jwtdecode from 'jwt-decode';
 const baseUrl = '/api/blogs';
 
 let token = null;
@@ -27,8 +28,6 @@ const update = async (updatedBlog) => {
 };
 
 const deleteBlog = async (id) => {
-  console.log(id);
-  console.log(token);
   const config = {
     headers: { Authorization: token },
   };
@@ -37,4 +36,18 @@ const deleteBlog = async (id) => {
   return response.data;
 };
 
-export default { getAll, setToken, create, update, deleteBlog };
+const getUserId = async () => {
+  const decodedToken = jwtdecode(token);
+  const userId = decodedToken.id;
+
+  return userId;
+};
+
+export default {
+  getAll,
+  setToken,
+  create,
+  update,
+  deleteBlog,
+  getUserId,
+};

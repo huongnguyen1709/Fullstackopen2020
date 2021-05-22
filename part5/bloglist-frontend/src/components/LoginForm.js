@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const LoginForm = ({
   handleSubmit,
@@ -8,21 +8,6 @@ const LoginForm = ({
   username,
   password,
 }) => {
-  const inputStyle = {
-    marginBottom: '20px',
-    fontSize: '20px',
-  };
-
-  const formStyle = {
-    width: '50vw',
-    margin: '0 auto',
-  };
-
-  const fontSize = {
-    fontSize: '15px',
-    padding: '0 5px',
-  };
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -43,8 +28,8 @@ const LoginForm = ({
         <button type='submit'>login</button>
       </form>
     </div>
-  );
-};
+  )
+}
 
 LoginForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
@@ -52,6 +37,6 @@ LoginForm.propTypes = {
   handlePasswordChange: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired,
-};
+}
 
-export default LoginForm;
+export default LoginForm
