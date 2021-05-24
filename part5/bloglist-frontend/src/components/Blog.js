@@ -51,20 +51,22 @@ const Blog = ({ blog, handleChange }) => {
   };
 
   const authorAction = () => {
-    const blogId = blog.user.id;
-    blogService
-      .getUserId()
-      .then((userId) => {
-        setUserId(userId);
-      })
-      .catch((err) => console.log(err));
+    if (blog.user) {
+      const blogId = blog.user.id;
+      blogService
+        .getUserId()
+        .then((userId) => {
+          setUserId(userId);
+        })
+        .catch((err) => console.log(err));
 
-    if (userId === blogId) {
-      return (
-        <button style={buttonStyle} onClick={handleDelete}>
-          remove
-        </button>
-      );
+      if (userId === blogId) {
+        return (
+          <button style={buttonStyle} onClick={handleDelete}>
+            remove
+          </button>
+        );
+      } else return null;
     } else return null;
   };
 

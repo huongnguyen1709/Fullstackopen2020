@@ -3,13 +3,12 @@ import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
 import Blog from './Blog';
 
-test('renders title and author', () => {
-  const blog = {
-    title: 'Component testing is done with react-testing-library',
-    author: 'Huong Nguyen',
-    user: { id: '123456789' },
-  };
+const blog = {
+  title: 'Component testing is done with react-testing-library',
+  author: 'Huong Nguyen',
+};
 
+test('renders title and author', () => {
   const component = render(<Blog blog={blog} />);
   const url = component.container.querySelector('.url');
 
@@ -22,13 +21,6 @@ test('renders title and author', () => {
 });
 
 test("the blog's url and number of likes are shown when the button controlling the shown details has been clicked", () => {
-  const blog = {
-    title: 'Component testing is done with react-testing-library',
-    author: 'Huong Nguyen',
-    url: 'url.link',
-    user: { id: '123456789' },
-  };
-
   const component = render(<Blog blog={blog} />);
   const url = component.container.querySelector('.url');
   const likes = component.container.querySelector('.likes');
@@ -44,5 +36,16 @@ test("the blog's url and number of likes are shown when the button controlling t
   expect(url).toHaveStyle('display: block');
   expect(likes).toHaveStyle('display: inline-block');
 
+  component.debug();
+});
+
+test('if the like button is clicked twice, the event handler the component received as props is called twice', () => {
+  const addLike = jest.fn();
+  const component = render(<button onClick={addLike}>like</button>);
+  const button = component.getByText('like');
+  fireEvent.click(button);
+  fireEvent.click(button);
+
+  expect(addLike.mock.calls).toHaveLength(2);
   component.debug();
 });
