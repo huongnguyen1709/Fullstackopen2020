@@ -19,7 +19,11 @@ const Blog = ({ blog, handleChange }) => {
   };
 
   const inlineBlock = {
-    display: 'inline-block',
+    display: showDetail ? 'inline-block' : 'none',
+  };
+
+  const url = {
+    display: showDetail ? '' : 'none',
   };
 
   const buttonStyle = {
@@ -71,8 +75,13 @@ const Blog = ({ blog, handleChange }) => {
         {showDetail ? 'hide' : 'view'}
       </button>
       <div style={detailStyle}>
-        <div className='url'>{blog.url}</div>
-        <div style={inlineBlock}>likes {likes}</div> &nbsp;
+        <div style={url} className='url'>
+          {blog.url}
+        </div>
+        <div className='likes' style={inlineBlock}>
+          likes {likes}
+        </div>{' '}
+        &nbsp;
         <button onClick={addLike}>like</button>
         <div>{blog.author}</div>
         {authorAction()}
