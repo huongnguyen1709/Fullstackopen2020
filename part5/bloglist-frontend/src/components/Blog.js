@@ -76,17 +76,13 @@ const Blog = ({ blog, handleChange }) => {
       <button id='view-button' onClick={() => setShowDetail(!showDetail)}>
         {showDetail ? 'hide' : 'view'}
       </button>
-      <div style={detailStyle}>
+      <div className='detail' style={detailStyle}>
         <div style={url} className='url'>
           {blog.url}
         </div>
-        <div className='likes' style={inlineBlock}>
-          likes {likes}
-        </div>
+        <div style={inlineBlock}>likes {likes}</div>
         &nbsp;
-        <button id='like-button' onClick={addLike}>
-          like
-        </button>
+        <button onClick={addLike}>like</button>
         <div>{blog.author}</div>
         {authorAction()}
       </div>

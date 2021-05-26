@@ -62,11 +62,23 @@ describe('Blog app', function () {
           author: 'Huong Nguyen',
           url: 'url link',
         });
+
+        cy.createBlog({
+          title: 'second blog',
+          author: 'Huong Nguyen',
+          url: 'url link',
+        });
+
+        cy.createBlog({
+          title: 'third blog',
+          author: 'Huong Nguyen',
+          url: 'url link',
+        });
       });
 
       it('user can like a blog', function () {
-        cy.get('#view-button').click();
-        cy.get('#like-button').click();
+        cy.contains('first blog').contains('view').click();
+        cy.contains('first blog').find('button').contains('like').click();
 
         cy.contains('first blog').contains('likes 1');
       });
