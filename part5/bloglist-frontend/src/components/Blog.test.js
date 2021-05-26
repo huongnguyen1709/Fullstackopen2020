@@ -2,6 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
 import Blog from './Blog';
+import BlogForm from './BlogForm';
 
 const blog = {
   title: 'Component testing is done with react-testing-library',
@@ -47,5 +48,41 @@ test('if the like button is clicked twice, the event handler the component recei
   fireEvent.click(button);
 
   expect(addLike.mock.calls).toHaveLength(2);
+  component.debug();
+});
+
+test('the form calls the event handler it received as props with the right details when a new blog is created', () => {
+  const createBlog = jest.fn();
+  const message = jest.fn();
+
+  const component = render(
+    <BlogForm createBlog={createBlog} message={message} />
+  );
+
+  const title = component.container.querySelector('#title');
+  const author = component.container.querySelector('#author');
+  const url = component.container.querySelector('#url');
+  const form = component.container.querySelector('form');
+
+  fireEvent.change(title, {
+    target: { value: 'testing of forms could be easier' },
+  });
+  fireEvent.change(author, {
+    target: { value: 'Huong Nguyen' },
+  });
+  fireEvent.change(url, {
+    target: { value: 'url link' },
+  });
+
+  fireEvent.submit(form);
+
+  expect(createBlog.mock.calls).toHaveLength(1);
+  expect(JSON.stringify(createBlog.mock.calls[0][0])).toBe(
+    JSON.stringify({
+      title: 'testing of forms could be easier',
+      author: 'Huong Nguyen',
+      url: 'url link',
+    })
+  );
   component.debug();
 });
