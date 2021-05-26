@@ -54,5 +54,22 @@ describe('Blog app', function () {
 
       cy.contains('A Lovely Blog');
     });
+
+    describe('and several notes exist', function () {
+      beforeEach(function () {
+        cy.createBlog({
+          title: 'first blog',
+          author: 'Huong Nguyen',
+          url: 'url link',
+        });
+      });
+
+      it('user can like a blog', function () {
+        cy.get('#view-button').click();
+        cy.get('#like-button').click();
+
+        cy.contains('first blog').contains('likes 1');
+      });
+    });
   });
 });
