@@ -71,7 +71,7 @@ const Blog = ({ blog, handleChange }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div className='blog' style={blogStyle}>
       {blog.title} &nbsp;
       <button id='view-button' onClick={() => setShowDetail(!showDetail)}>
         {showDetail ? 'hide' : 'view'}

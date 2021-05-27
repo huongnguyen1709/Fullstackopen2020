@@ -62,7 +62,7 @@ describe('Blog app', function () {
       cy.contains('A Lovely Blog');
     });
 
-    describe('and several notes exist', function () {
+    describe('and several blogs exist', function () {
       beforeEach(function () {
         cy.createBlog({
           title: 'first blog',
@@ -106,6 +106,34 @@ describe('Blog app', function () {
 
         cy.contains('third blog').contains('view').click();
         cy.contains('third blog').should('not.contain', 'remove');
+      });
+
+      describe('Like a blog', function () {
+        beforeEach(function () {
+          cy.contains('second blog').contains('view').click();
+          cy.contains('second blog').find('button').contains('like').click();
+          cy.contains('second blog').find('button').contains('like').click();
+          cy.contains('second blog').find('button').contains('like').click();
+          cy.contains('second blog').find('button').contains('like').click();
+          cy.contains('second blog').find('button').contains('like').click();
+
+          cy.contains('third blog').contains('view').click();
+          cy.contains('third blog').find('button').contains('like').click();
+          cy.contains('third blog').find('button').contains('like').click();
+          cy.contains('third blog').find('button').contains('like').click();
+
+          cy.visit('http://localhost:3000');
+        });
+
+        it('the blogs are ordered according to likes with the blog with the most likes being first', function () {
+          cy.contains('first blog').contains('view').click();
+          cy.contains('second blog').contains('view').click();
+          cy.contains('third blog').contains('view').click();
+
+          cy.get('.blog').eq(0).should('contain', '5');
+          cy.get('.blog').eq(1).should('contain', '3');
+          cy.get('.blog').eq(2).should('contain', '0');
+        });
       });
     });
   });
