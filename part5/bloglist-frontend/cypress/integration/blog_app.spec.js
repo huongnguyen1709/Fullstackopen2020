@@ -1,12 +1,19 @@
 describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3003/api/testing/reset');
-    const user = {
+    const user1 = {
       name: 'Matti Luukkainen',
       username: 'mluukkai',
       password: 'salainen',
     };
-    cy.request('POST', 'http://localhost:3003/api/users', user);
+
+    const user2 = {
+      name: 'Huong Nguyen',
+      username: 'huongnguyen',
+      password: 'salainen',
+    };
+    cy.request('POST', 'http://localhost:3003/api/users', user1);
+    cy.request('POST', 'http://localhost:3003/api/users', user2);
     cy.visit('http://localhost:3000');
   });
 
@@ -81,6 +88,24 @@ describe('Blog app', function () {
         cy.contains('first blog').find('button').contains('like').click();
 
         cy.contains('first blog').contains('likes 1');
+      });
+
+      it('the user who created a blog can delete it', function () {
+        cy.contains('second blog').contains('view').click();
+        cy.contains('second blog').find('button').contains('remove').click();
+
+        cy.get('html').should('not.contain', 'second blog');
+      });
+
+      it('other users cannot delete the blog', function () {
+        // logout of the current user who created these blogs
+        cy.contains('logout').click();
+        // and log into another user who did not created the blogs
+        cy.login({ username: 'huongnguyen', password: 'salainen' });
+        cy.contains('Huong Nguyen logged-in');
+
+        cy.contains('third blog').contains('view').click();
+        cy.contains('third blog').should('not.contain', 'remove');
       });
     });
   });
