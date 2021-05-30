@@ -26,6 +26,7 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'VOTE':
       state.find((anec) => anec.id === action.id).votes++;
+      state.sort((a, b) => (a.votes > b.votes ? -1 : 1));
       return [...state];
 
     case 'NEW_ANECDOTE':
