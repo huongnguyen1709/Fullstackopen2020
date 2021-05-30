@@ -1,8 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { voteAnec } from '../reducers/anecdoteReducer';
-import { setNotification } from '../reducers/notificationReducer';
-import { removeNotification } from '../reducers/notificationReducer';
+import {
+  setNotification,
+  removeNotification,
+} from '../reducers/notificationReducer';
 
 const Anecdote = ({ content, votes, handleVote }) => {
   return (
