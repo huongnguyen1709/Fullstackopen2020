@@ -26,8 +26,10 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'VOTE':
       state.find((anec) => anec.id === action.id).votes++;
-      console.log(state);
       return [...state];
+
+    case 'NEW_ANECDOTE':
+      return [...state, action.data];
 
     default:
       return state;
@@ -38,6 +40,17 @@ export const voteAnec = (id) => {
   return {
     type: 'VOTE',
     id,
+  };
+};
+
+export const createAnec = (content) => {
+  return {
+    type: 'NEW_ANECDOTE',
+    data: {
+      content,
+      id: getId(),
+      votes: 0,
+    },
   };
 };
 
