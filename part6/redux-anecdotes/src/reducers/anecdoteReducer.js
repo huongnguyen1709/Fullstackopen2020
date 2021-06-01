@@ -1,5 +1,3 @@
-const getId = () => (100000 * Math.random()).toFixed(0);
-
 const reducer = (state = [], action) => {
   console.log('state now: ', state);
   console.log('action', action);
@@ -33,14 +31,10 @@ export const voteAnec = (id) => {
   };
 };
 
-export const createAnec = (content) => {
+export const createAnec = (data) => {
   return {
     type: 'NEW_ANECDOTE',
-    data: {
-      content,
-      id: getId(),
-      votes: 0,
-    },
+    data,
   };
 };
 
