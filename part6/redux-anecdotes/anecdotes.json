@@ -18,7 +18,7 @@
     {
       "content": "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
       "id": "36975",
-      "votes": 1
+      "votes": 2
     },
     {
       "content": "Premature optimization is the root of all evil.",
@@ -38,12 +38,17 @@
     {
       "content": "New Lovely Anecdote",
       "id": "59585",
-      "votes": 1
+      "votes": 2
     },
     {
       "content": "Huong create a new Blog",
       "id": "90432",
       "votes": 2
+    },
+    {
+      "content": "Huong create a new Lovely note",
+      "id": "98648",
+      "votes": 0
     }
   ]
 }
