@@ -3,7 +3,7 @@
     {
       "content": "If it hurts, do it more often",
       "id": "47145",
-      "votes": 3
+      "votes": 4
     },
     {
       "content": "Adding manpower to a late software project makes it later!",
@@ -33,7 +33,7 @@
     {
       "content": "Huong create new one",
       "id": "92108",
-      "votes": 5
+      "votes": 12
     },
     {
       "content": "New Lovely Anecdote",
@@ -48,6 +48,11 @@
     {
       "content": "Huong create a new Lovely note",
       "id": "98648",
+      "votes": 0
+    },
+    {
+      "content": "Huong try to create a new Blog",
+      "id": "78639",
       "votes": 0
     }
   ]
