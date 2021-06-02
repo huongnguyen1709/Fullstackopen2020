@@ -1,3 +1,5 @@
+let timeoutID;
+
 const reducer = (state = '', action) => {
   console.log('state now: ', state);
   console.log('action', action);
@@ -16,11 +18,16 @@ const reducer = (state = '', action) => {
 
 export const setNotification = (message, time) => {
   return async (dispatch) => {
+    if (timeoutID) {
+      clearTimeout(timeoutID);
+    }
+
     await dispatch({
       type: 'SET_NOTIFICATION',
       message,
     });
-    setTimeout(() => {
+
+    timeoutID = setTimeout(() => {
       dispatch({
         type: 'REMOVE_NOTIFICATION',
       });

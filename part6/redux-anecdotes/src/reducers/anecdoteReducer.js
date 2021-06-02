@@ -6,7 +6,9 @@ const reducer = (state = [], action) => {
 
   switch (action.type) {
     case 'INIT_ANECDOTES':
-      return action.data;
+      const anecdotes = action.data;
+      anecdotes.sort((a, b) => (a.votes > b.votes ? -1 : 1));
+      return [...anecdotes];
     case 'VOTE_ANECDOTE':
       state.find((anec) => anec.id === action.id).votes++;
       state.sort((a, b) => (a.votes > b.votes ? -1 : 1));
@@ -32,7 +34,7 @@ export const initializeAnecdotes = () => {
 
 export const voteAnec = (anecdote) => {
   return async (dispatch) => {
-    const updatedAnec = await anecdoteService.updateVotes(anecdote);
+    await anecdoteService.updateVotes(anecdote);
     dispatch({
       type: 'VOTE_ANECDOTE',
       id: anecdote.id,
