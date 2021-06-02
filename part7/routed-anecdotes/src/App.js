@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Switch, Route, Link, useRouteMatch } from 'react-router-dom';
+import {
+  Switch,
+  Route,
+  Link,
+  useRouteMatch,
+  useHistory,
+} from 'react-router-dom';
 
 const Menu = () => {
   const padding = {
@@ -80,6 +86,7 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
+  const history = useHistory();
   const [content, setContent] = useState('');
   const [author, setAuthor] = useState('');
   const [info, setInfo] = useState('');
@@ -92,6 +99,11 @@ const CreateNew = (props) => {
       info,
       votes: 0,
     });
+    props.notification(`a new anecdote ${content} created!`);
+    setTimeout(() => {
+      props.notification('');
+    }, 10000);
+    history.push('/');
   };
 
   return (
@@ -153,6 +165,14 @@ const App = () => {
     ? anecdotes.find((anecdote) => anecdote.id === match.params.id)
     : null;
 
+  const notiStyle = {
+    display: notification ? '' : 'none',
+    width: '40%',
+    padding: '4px',
+    border: '3px solid red',
+    fontWeight: 'bold',
+  };
+
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0);
     setAnecdotes(anecdotes.concat(anecdote));
@@ -175,13 +195,13 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
-
+      <div style={notiStyle}>{notification}</div>
       <Switch>
         <Route path='/anecdotes/:id'>
           <Anecdote anecdote={anecdote} />
         </Route>
         <Route path='/create'>
-          <CreateNew addNew={addNew} />
+          <CreateNew addNew={addNew} notification={(e) => setNotification(e)} />
         </Route>
         <Route path='/about'>
           <About />
