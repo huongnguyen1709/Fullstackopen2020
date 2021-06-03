@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useField } from './hooks';
 import {
   Switch,
   Route,
@@ -87,19 +88,19 @@ const Footer = () => (
 
 const CreateNew = (props) => {
   const history = useHistory();
-  const [content, setContent] = useState('');
-  const [author, setAuthor] = useState('');
-  const [info, setInfo] = useState('');
+  const content = useField('text');
+  const author = useField('text');
+  const info = useField('text');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0,
     });
-    props.notification(`a new anecdote ${content} created!`);
+    props.notification(`a new anecdote ${content.value} created!`);
     setTimeout(() => {
       props.notification('');
     }, 10000);
@@ -112,27 +113,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input
-            name='content'
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+          <input name='content' {...content} />
         </div>
         <div>
           author
-          <input
-            name='author'
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          <input name='author' {...author} />
         </div>
         <div>
           url for more info
-          <input
-            name='info'
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          <input name='info' {...info} />
         </div>
         <button>create</button>
       </form>
