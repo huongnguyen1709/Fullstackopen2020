@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const baseUrl = 'https://restcountries.eu/rest/v2/name/aruba?fullText=true';
-
 const useField = (type) => {
   const [value, setValue] = useState('');
 
