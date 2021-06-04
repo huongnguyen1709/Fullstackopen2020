@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setNotification } from '../reducers/notificationReducer';
 
-const BlogForm = ({ createBlog, message }) => {
+const BlogForm = ({ createBlog }) => {
+  const dispatch = useDispatch();
+
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
@@ -22,10 +26,11 @@ const BlogForm = ({ createBlog, message }) => {
     setAuthor('');
     setUrl('');
 
-    message(`a new blog ${title} by ${author} added`);
-    setTimeout(() => {
-      message(null);
-    }, 5000);
+    const notification = {
+      message: `a new blog ${title} by ${author} added`,
+      error: false,
+    };
+    dispatch(setNotification(notification, 5));
   };
 
   return (

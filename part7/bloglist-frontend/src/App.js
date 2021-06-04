@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
@@ -7,10 +8,13 @@ import blogService from './services/blogs';
 import loginService from './services/login';
 import Togglable from './components/Togglable';
 
+import { setNotification } from './reducers/notificationReducer';
+
 const App = () => {
+  const dispatch = useDispatch();
+
   const [blogs, setBlogs] = useState([]);
-  const [message, setMessage] = useState(null);
-  const [error, setError] = useState(false);
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
@@ -63,20 +67,20 @@ const App = () => {
         setUsername('');
         setPassword('');
       } else {
-        setMessage('Wrong username or password');
-        setError(true);
-        setTimeout(() => {
-          setMessage(null);
-          setError(false);
-        }, 5000);
+        const notification = {
+          message: 'Wrong username or password',
+          error: true,
+        };
+        dispatch(setNotification(notification, 5));
+        setUsername('');
+        setPassword('');
       }
     } catch (exception) {
-      setMessage('Wrong credentials');
-      setError(true);
-      setTimeout(() => {
-        setMessage(null);
-        setError(false);
-      }, 5000);
+      const notification = {
+        message: 'Wrong credentials',
+        error: true,
+      };
+      dispatch(setNotification(notification, 5));
     }
   };
 
@@ -103,10 +107,7 @@ const App = () => {
 
   const blogForm = () => (
     <Togglable buttonLabel='new blog' ref={blogFormRef}>
-      <BlogForm
-        createBlog={addBlog}
-        message={(message) => setMessage(message)}
-      />
+      <BlogForm createBlog={addBlog} />
     </Togglable>
   );
 
@@ -122,7 +123,7 @@ const App = () => {
   return (
     <div style={marginLeft}>
       <h2>blogs</h2>
-      <Notification notification={message} error={error} />
+      <Notification />
       {user === null ? (
         loginForm()
       ) : (
