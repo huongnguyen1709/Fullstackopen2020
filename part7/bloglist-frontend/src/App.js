@@ -9,11 +9,15 @@ import loginService from './services/login';
 import Togglable from './components/Togglable';
 
 import { setNotification } from './reducers/notificationReducer';
+import { initializeBlogs } from './reducers/blogReducer';
 
 const App = () => {
   const dispatch = useDispatch();
+  const blogs = useSelector((state) => state.blogs);
 
-  const [blogs, setBlogs] = useState([]);
+  useEffect(() => {
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -34,14 +38,14 @@ const App = () => {
     display: 'inline-block',
   };
 
-  useEffect(() => {
-    blogService.getAll().then((initialBlogs) => {
-      initialBlogs = initialBlogs.sort(function (a, b) {
-        return b.likes - a.likes;
-      });
-      setBlogs(initialBlogs);
-    });
-  }, [user, isChange]);
+  // useEffect(() => {
+  //   blogService.getAll().then((initialBlogs) => {
+  //     initialBlogs = initialBlogs.sort(function (a, b) {
+  //       return b.likes - a.likes;
+  //     });
+  //     setBlogs(initialBlogs);
+  //   });
+  // }, [user, isChange]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
@@ -98,23 +102,20 @@ const App = () => {
     );
   };
 
-  const addBlog = (newBlog) => {
+  const toggleVisibility = () => {
     blogFormRef.current.toggleVisibility();
-    blogService.create(newBlog).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog));
-    });
   };
 
   const blogForm = () => (
     <Togglable buttonLabel='new blog' ref={blogFormRef}>
-      <BlogForm createBlog={addBlog} />
+      <BlogForm toggleVisibility={toggleVisibility} />
     </Togglable>
   );
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser');
     setUser(null);
-    setBlogs([]);
+    // setBlogs([]);
     blogService.setToken(null);
   };
 

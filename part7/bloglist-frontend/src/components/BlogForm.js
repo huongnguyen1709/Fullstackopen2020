@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setNotification } from '../reducers/notificationReducer';
+import { createNewBlog } from '../reducers/blogReducer';
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = ({ toggleVisibility }) => {
   const dispatch = useDispatch();
 
   const [title, setTitle] = useState('');
@@ -16,11 +17,14 @@ const BlogForm = ({ createBlog }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    createBlog({
+    const newBlog = {
       title,
       author,
       url,
-    });
+    };
+
+    dispatch(createNewBlog(newBlog));
+    toggleVisibility();
 
     setTitle('');
     setAuthor('');
