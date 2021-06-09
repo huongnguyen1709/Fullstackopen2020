@@ -24,7 +24,7 @@ export const setNotification = (notification, time) => {
       clearTimeout(timeoutID);
     }
 
-    await dispatch({
+    dispatch({
       type: 'SET_NOTIFICATION',
       notification,
     });
