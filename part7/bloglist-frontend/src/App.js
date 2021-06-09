@@ -24,7 +24,6 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   const blogFormRef = useRef();
-  const [isChange, setIsChange] = useState(false);
 
   const marginLeft = {
     marginLeft: '20px',
@@ -38,15 +37,6 @@ const App = () => {
     display: 'inline-block',
   };
 
-  // useEffect(() => {
-  //   blogService.getAll().then((initialBlogs) => {
-  //     initialBlogs = initialBlogs.sort(function (a, b) {
-  //       return b.likes - a.likes;
-  //     });
-  //     setBlogs(initialBlogs);
-  //   });
-  // }, [user, isChange]);
-
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
     if (loggedUserJSON) {
@@ -59,15 +49,21 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const user = await loginService.login({
+      let user = await loginService.login({
         username,
         password,
       });
 
       if (user) {
-        window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
         blogService.setToken(user.token);
+        const userId = await blogService.getUserId();
+        user = {
+          ...user,
+          id: userId,
+        };
+        window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
         setUser(user);
+
         setUsername('');
         setPassword('');
       } else {
@@ -119,8 +115,6 @@ const App = () => {
     blogService.setToken(null);
   };
 
-  console.log(blogs);
-
   return (
     <div style={marginLeft}>
       <h2>blogs</h2>
@@ -135,12 +129,7 @@ const App = () => {
           <div style={marginTop}>
             {blogs &&
               blogs.map((blog) => (
-                <Blog
-                  key={blog.id}
-                  blog={blog}
-                  user={user}
-                  handleChange={() => setIsChange(!isChange)}
-                />
+                <Blog key={blog.id} blog={blog} userID={user.id} />
               ))}
           </div>
         </div>

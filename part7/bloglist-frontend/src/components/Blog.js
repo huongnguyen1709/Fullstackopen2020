@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import blogService from '../services/blogs';
+import { useDispatch } from 'react-redux';
 
-const Blog = ({ blog, handleChange }) => {
+import { addLikeBlog, deleteBlog } from '../reducers/blogReducer';
+
+const Blog = ({ blog, userID }) => {
+  const dispatch = useDispatch();
+
   const [showDetail, setShowDetail] = useState(false);
-  const [likes, setLikes] = useState(blog.likes);
-  const [userId, setUserId] = useState(null);
 
   const blogStyle = {
     paddingTop: 10,
@@ -26,47 +28,41 @@ const Blog = ({ blog, handleChange }) => {
     display: showDetail ? '' : 'none',
   };
 
-  const buttonStyle = {
+  const removeButtonStyle = {
     margin: '5px',
     backgroundColor: '#318CE7',
     borderRadius: '5px',
     border: 'none',
   };
 
-  const addLike = async () => {
-    const response = await blogService.update({
-      ...blog,
-      user: blog.user.id,
-      likes: likes + 1,
-    });
-    setLikes(response.likes);
-  };
-
   const handleDelete = async () => {
     console.log(blog.id);
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      await blogService.deleteBlog(blog.id);
-      handleChange();
+      dispatch(deleteBlog(blog.id));
     }
   };
 
   const authorAction = () => {
     if (blog.user) {
-      const blogId = blog.user.id;
-      blogService
-        .getUserId()
-        .then((userId) => {
-          setUserId(userId);
-        })
-        .catch((err) => console.log(err));
+      const blogUserID = blog.user;
 
-      if (userId === blogId) {
+      if (userID === blogUserID) {
         return (
-          <button style={buttonStyle} onClick={handleDelete}>
+          <button style={removeButtonStyle} onClick={handleDelete}>
             remove
           </button>
         );
-      } else return null;
+      }
+      if (blog.user.id) {
+        const blogUserID = blog.user.id;
+        if (userID === blogUserID) {
+          return (
+            <button style={removeButtonStyle} onClick={handleDelete}>
+              remove
+            </button>
+          );
+        }
+      }
     } else return null;
   };
 
@@ -80,9 +76,9 @@ const Blog = ({ blog, handleChange }) => {
         <div style={url} className='url'>
           {blog.url}
         </div>
-        <div style={inlineBlock}>likes {likes}</div>
+        <div style={inlineBlock}>likes {blog.likes}</div>
         &nbsp;
-        <button onClick={addLike}>like</button>
+        <button onClick={() => dispatch(addLikeBlog(blog))}>like</button>
         <div>{blog.author}</div>
         {authorAction()}
       </div>

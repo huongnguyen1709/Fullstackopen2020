@@ -11,7 +11,6 @@ const reducer = (state = [], action) => {
       return [...anecdotes];
     case 'VOTE_ANECDOTE':
       state.find((anec) => anec.id === action.id).votes++;
-      state.sort((a, b) => (a.votes > b.votes ? -1 : 1));
       return [...state];
     case 'NEW_ANECDOTE':
       return [...state, action.data];
