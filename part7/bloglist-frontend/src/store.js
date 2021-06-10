@@ -10,7 +10,7 @@ import usersReducer from './reducers/usersReducer';
 const reducer = combineReducers({
   notification: notificationReducer,
   blogs: blogReducer,
-  user: loggedInUserReducer,
+  loggedInUser: loggedInUserReducer,
   users: usersReducer,
 });
 

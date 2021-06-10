@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import { addLikeBlog, deleteBlog } from '../reducers/blogReducer';
 
-const Blog = ({ blog, userID }) => {
+const Blog = ({ blog, loggedInUserID }) => {
   const dispatch = useDispatch();
 
   const [showDetail, setShowDetail] = useState(false);
@@ -46,7 +46,7 @@ const Blog = ({ blog, userID }) => {
     if (blog.user) {
       const blogUserID = blog.user;
 
-      if (userID === blogUserID) {
+      if (loggedInUserID === blogUserID) {
         return (
           <button style={removeButtonStyle} onClick={handleDelete}>
             remove
@@ -55,7 +55,7 @@ const Blog = ({ blog, userID }) => {
       }
       if (blog.user.id) {
         const blogUserID = blog.user.id;
-        if (userID === blogUserID) {
+        if (loggedInUserID === blogUserID) {
           return (
             <button style={removeButtonStyle} onClick={handleDelete}>
               remove

@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route, Link, useRouteMatch } from 'react-router-dom';
 
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
+import Users from './components/Users';
+import User from './components/User';
 
 import Togglable from './components/Togglable';
 
@@ -16,12 +18,14 @@ import {
   logoutUser,
 } from './reducers/loggedInUserReducer';
 
-import Users from './components/Users';
-
 const App = () => {
   const dispatch = useDispatch();
   const blogs = useSelector((state) => state.blogs);
-  const user = useSelector((state) => state.user);
+  const loggedInUser = useSelector((state) => state.loggedInUser);
+  const users = useSelector((state) => state.users);
+
+  const match = useRouteMatch('/users/:id');
+  const user = match ? users.find((user) => user.id === match.params.id) : null;
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -88,14 +92,14 @@ const App = () => {
   };
 
   return (
-    <Router style={marginLeft}>
+    <div style={marginLeft}>
       <h2>blogs</h2>
       <Notification />
-      {user === null ? (
+      {loggedInUser === null ? (
         loginForm()
       ) : (
         <div style={marginTop}>
-          <p style={inlineBlock}>{user.name} logged-in</p> &nbsp;
+          <p style={inlineBlock}>{loggedInUser.name} logged-in</p> &nbsp;
           <button onClick={handleLogout}>logout</button>
           <div>
             <Link to='/' style={padding}>
@@ -106,6 +110,9 @@ const App = () => {
             </Link>
           </div>
           <Switch>
+            <Route path='/users/:id'>
+              <User user={user} />
+            </Route>
             <Route path='/users'>
               <Users />
             </Route>
@@ -115,14 +122,18 @@ const App = () => {
               <div style={marginTop}>
                 {blogs &&
                   blogs.map((blog) => (
-                    <Blog key={blog.id} blog={blog} userID={user.id} />
+                    <Blog
+                      key={blog.id}
+                      blog={blog}
+                      loggedInUserID={loggedInUser.id}
+                    />
                   ))}
               </div>
             </Route>
           </Switch>
         </div>
       )}
-    </Router>
+    </div>
   );
 };
 

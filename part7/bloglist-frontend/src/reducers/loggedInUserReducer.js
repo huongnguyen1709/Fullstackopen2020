@@ -5,7 +5,7 @@ import { setNotification } from './notificationReducer';
 
 const reducer = (state = null, action) => {
   switch (action.type) {
-    case 'INIT_USER':
+    case 'INIT_LOGGED_IN_USER':
       return { ...action.user };
     case 'LOGIN':
       return { ...action.user };
@@ -23,7 +23,7 @@ export const initializeUser = () => {
       const user = JSON.parse(loggedUserJSON);
       blogService.setToken(user.token);
       dispatch({
-        type: 'INIT_USER',
+        type: 'INIT_LOGGED_IN_USER',
         user,
       });
     }
