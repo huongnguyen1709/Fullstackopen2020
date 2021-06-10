@@ -35,7 +35,7 @@ export const initializeBlogs = () => {
   };
 };
 
-export const createNewBlog = async (blog) => {
+export const createNewBlog = (blog) => {
   return async (dispatch) => {
     const newBlog = await blogService.create(blog);
     dispatch({
@@ -45,7 +45,7 @@ export const createNewBlog = async (blog) => {
   };
 };
 
-export const addLikeBlog = async (blog) => {
+export const addLikeBlog = (blog) => {
   return async (dispatch) => {
     const updatedBlog = await blogService.updateLikes(blog);
     console.log(updatedBlog);
@@ -56,7 +56,7 @@ export const addLikeBlog = async (blog) => {
   };
 };
 
-export const deleteBlog = async (id) => {
+export const deleteBlog = (id) => {
   return async (dispatch) => {
     await blogService.deleteBlog(id);
     dispatch({

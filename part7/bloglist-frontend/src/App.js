@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
@@ -9,20 +10,26 @@ import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 
 import { initializeBlogs } from './reducers/blogReducer';
-import { initializeUser, loginUser, logoutUser } from './reducers/userReducer';
+import {
+  initializeUser,
+  loginUser,
+  logoutUser,
+} from './reducers/loggedInUserReducer';
+
+import Users from './components/Users';
 
 const App = () => {
   const dispatch = useDispatch();
   const blogs = useSelector((state) => state.blogs);
   const user = useSelector((state) => state.user);
 
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
   useEffect(() => {
     dispatch(initializeBlogs());
     dispatch(initializeUser());
   }, [dispatch]);
-
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
 
   const blogFormRef = useRef();
 
@@ -36,6 +43,10 @@ const App = () => {
 
   const inlineBlock = {
     display: 'inline-block',
+  };
+
+  const padding = {
+    paddingRight: 5,
   };
 
   const handleLogin = async (event) => {
@@ -77,7 +88,7 @@ const App = () => {
   };
 
   return (
-    <div style={marginLeft}>
+    <Router style={marginLeft}>
       <h2>blogs</h2>
       <Notification />
       {user === null ? (
@@ -86,16 +97,32 @@ const App = () => {
         <div style={marginTop}>
           <p style={inlineBlock}>{user.name} logged-in</p> &nbsp;
           <button onClick={handleLogout}>logout</button>
-          {blogForm()}
-          <div style={marginTop}>
-            {blogs &&
-              blogs.map((blog) => (
-                <Blog key={blog.id} blog={blog} userID={user.id} />
-              ))}
+          <div>
+            <Link to='/' style={padding}>
+              home
+            </Link>
+            <Link to='/users' style={padding}>
+              users
+            </Link>
           </div>
+          <Switch>
+            <Route path='/users'>
+              <Users />
+            </Route>
+            <Route path='/'>
+              <div style={marginTop}>{blogForm()}</div>
+
+              <div style={marginTop}>
+                {blogs &&
+                  blogs.map((blog) => (
+                    <Blog key={blog.id} blog={blog} userID={user.id} />
+                  ))}
+              </div>
+            </Route>
+          </Switch>
         </div>
       )}
-    </div>
+    </Router>
   );
 };
 
