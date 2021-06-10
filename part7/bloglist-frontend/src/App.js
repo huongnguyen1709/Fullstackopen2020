@@ -24,8 +24,15 @@ const App = () => {
   const loggedInUser = useSelector((state) => state.loggedInUser);
   const users = useSelector((state) => state.users);
 
-  const match = useRouteMatch('/users/:id');
-  const user = match ? users.find((user) => user.id === match.params.id) : null;
+  const matchUser = useRouteMatch('/users/:id');
+  const user = matchUser
+    ? users.find((user) => user.id === matchUser.params.id)
+    : null;
+
+  const matchBlog = useRouteMatch('/blogs/:id');
+  const blog = matchBlog
+    ? blogs.find((blog) => blog.id === matchBlog.params.id)
+    : null;
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -51,6 +58,14 @@ const App = () => {
 
   const padding = {
     paddingRight: 5,
+  };
+
+  const boxStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5,
   };
 
   const handleLogin = async (event) => {
@@ -95,6 +110,7 @@ const App = () => {
     <div style={marginLeft}>
       <h2>blogs</h2>
       <Notification />
+
       {loggedInUser === null ? (
         loginForm()
       ) : (
@@ -116,17 +132,18 @@ const App = () => {
             <Route path='/users'>
               <Users />
             </Route>
+            <Route path='/blogs/:id'>
+              <Blog blog={blog} loggedInUserID={loggedInUser.id} />
+            </Route>
             <Route path='/'>
               <div style={marginTop}>{blogForm()}</div>
 
               <div style={marginTop}>
                 {blogs &&
                   blogs.map((blog) => (
-                    <Blog
-                      key={blog.id}
-                      blog={blog}
-                      loggedInUserID={loggedInUser.id}
-                    />
+                    <div key={blog.id} style={boxStyle}>
+                      <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                    </div>
                   ))}
               </div>
             </Route>

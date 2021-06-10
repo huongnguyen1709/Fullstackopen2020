@@ -6,26 +6,8 @@ import { addLikeBlog, deleteBlog } from '../reducers/blogReducer';
 const Blog = ({ blog, loggedInUserID }) => {
   const dispatch = useDispatch();
 
-  const [showDetail, setShowDetail] = useState(false);
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
-  const detailStyle = {
-    display: showDetail ? '' : 'none',
-  };
-
   const inlineBlock = {
-    display: showDetail ? 'inline-block' : 'none',
-  };
-
-  const url = {
-    display: showDetail ? '' : 'none',
+    display: 'inline-block',
   };
 
   const removeButtonStyle = {
@@ -66,22 +48,19 @@ const Blog = ({ blog, loggedInUserID }) => {
     } else return null;
   };
 
+  if (!blog) {
+    return null;
+  }
+
   return (
-    <div className='blog' style={blogStyle}>
-      {blog.title} &nbsp;
-      <button id='view-button' onClick={() => setShowDetail(!showDetail)}>
-        {showDetail ? 'hide' : 'view'}
-      </button>
-      <div className='detail' style={detailStyle}>
-        <div style={url} className='url'>
-          {blog.url}
-        </div>
-        <div style={inlineBlock}>likes {blog.likes}</div>
-        &nbsp;
-        <button onClick={() => dispatch(addLikeBlog(blog))}>like</button>
-        <div>{blog.author}</div>
-        {authorAction()}
-      </div>
+    <div>
+      <h2>{blog.title}</h2>
+      <div>{blog.url}</div>
+      <div style={inlineBlock}>likes {blog.likes}</div>
+      &nbsp;
+      <button onClick={() => dispatch(addLikeBlog(blog))}>like</button>
+      <div>{blog.author}</div>
+      {authorAction()}
     </div>
   );
 };

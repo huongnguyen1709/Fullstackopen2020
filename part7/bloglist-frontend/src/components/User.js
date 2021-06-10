@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { initializeUsersList } from '../reducers/usersReducer';
+import React from 'react';
 
 const User = ({ user }) => {
   if (!user) {

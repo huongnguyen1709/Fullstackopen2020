@@ -48,7 +48,6 @@ export const createNewBlog = (blog) => {
 export const addLikeBlog = (blog) => {
   return async (dispatch) => {
     const updatedBlog = await blogService.updateLikes(blog);
-    console.log(updatedBlog);
     dispatch({
       type: 'ADD_LIKE_BLOG',
       id: blog.id,
