@@ -8,6 +8,7 @@ import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import Users from './components/Users';
 import User from './components/User';
+import Menu from './components/Menu';
 
 import Togglable from './components/Togglable';
 
@@ -102,29 +103,19 @@ const App = () => {
     </Togglable>
   );
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
-  };
-
   return (
     <div style={marginLeft}>
-      <h2>blogs</h2>
+      <Menu
+        loggedInUser={loggedInUser}
+        handleLogout={() => dispatch(logoutUser())}
+      />
+      <h2 style={marginTop}>blogs</h2>
       <Notification />
 
       {loggedInUser === null ? (
         loginForm()
       ) : (
         <div style={marginTop}>
-          <p style={inlineBlock}>{loggedInUser.name} logged-in</p> &nbsp;
-          <button onClick={handleLogout}>logout</button>
-          <div>
-            <Link to='/' style={padding}>
-              home
-            </Link>
-            <Link to='/users' style={padding}>
-              users
-            </Link>
-          </div>
           <Switch>
             <Route path='/users/:id'>
               <User user={user} />
