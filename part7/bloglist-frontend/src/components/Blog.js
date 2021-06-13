@@ -55,11 +55,20 @@ const Blog = ({ blog, loggedInUserID }) => {
   return (
     <div>
       <h2>{blog.title}</h2>
-      <div>{blog.url}</div>
+      <div>
+        <a href={blog.url}></a>
+        {blog.url}
+      </div>
       <div style={inlineBlock}>likes {blog.likes}</div>
       &nbsp;
       <button onClick={() => dispatch(addLikeBlog(blog))}>like</button>
-      <div>{blog.author}</div>
+      <div>added by {blog.author}</div>
+      <h3>comments</h3>
+      <ul>
+        {blog &&
+          blog.comments &&
+          blog.comments.map((comment) => <li>{comment}</li>)}
+      </ul>
       {authorAction()}
     </div>
   );
