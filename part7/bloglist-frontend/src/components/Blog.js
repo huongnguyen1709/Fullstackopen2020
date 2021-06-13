@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { addLikeBlog, deleteBlog } from '../reducers/blogReducer';
+import {
+  addLikeBlog,
+  deleteBlog,
+  addCommentToBlog,
+} from '../reducers/blogReducer';
 
 const Blog = ({ blog, loggedInUserID }) => {
   const dispatch = useDispatch();
+
+  const [comment, setComment] = useState('');
 
   const inlineBlock = {
     display: 'inline-block',
@@ -56,18 +62,30 @@ const Blog = ({ blog, loggedInUserID }) => {
     <div>
       <h2>{blog.title}</h2>
       <div>
-        <a href={blog.url}></a>
-        {blog.url}
+        <a href={blog.url}>{blog.url}</a>
       </div>
       <div style={inlineBlock}>likes {blog.likes}</div>
       &nbsp;
       <button onClick={() => dispatch(addLikeBlog(blog))}>like</button>
       <div>added by {blog.author}</div>
       <h3>comments</h3>
+      <input
+        value={comment}
+        onChange={({ target }) => setComment(target.value)}
+      />
+      <button
+        type='submit'
+        onClick={() => {
+          dispatch(addCommentToBlog(blog, comment));
+          setComment('');
+        }}
+      >
+        add comment
+      </button>
       <ul>
         {blog &&
           blog.comments &&
-          blog.comments.map((comment) => <li>{comment}</li>)}
+          blog.comments.map((comment, index) => <li key={index}>{comment}</li>)}
       </ul>
       {authorAction()}
     </div>

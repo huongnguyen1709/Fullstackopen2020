@@ -53,14 +53,6 @@ const App = () => {
     marginTop: '20px',
   };
 
-  const inlineBlock = {
-    display: 'inline-block',
-  };
-
-  const padding = {
-    paddingRight: 5,
-  };
-
   const boxStyle = {
     paddingTop: 10,
     paddingLeft: 2,

@@ -48,6 +48,16 @@ const getUserId = async () => {
   return userId;
 };
 
+const addComment = async (blog, comment) => {
+  const updatedBlog = {
+    ...blog,
+    user: blog.user.id,
+    comments: [...blog.comments, comment],
+  };
+  const response = await axios.put(`${baseUrl}/${blog.id}`, updatedBlog);
+  return response.data;
+};
+
 export default {
   getAll,
   setToken,
@@ -55,4 +65,5 @@ export default {
   updateLikes,
   deleteBlog,
   getUserId,
+  addComment,
 };
