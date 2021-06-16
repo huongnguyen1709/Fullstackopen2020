@@ -3,6 +3,10 @@ import { useDispatch } from 'react-redux';
 import { setNotification } from '../reducers/notificationReducer';
 import { createNewBlog } from '../reducers/blogReducer';
 
+import InputLabel from '@material-ui/core/InputLabel';
+import Button from '@material-ui/core/Button';
+import Input from '@material-ui/core/Input';
+
 const BlogForm = ({ toggleVisibility }) => {
   const dispatch = useDispatch();
 
@@ -10,7 +14,13 @@ const BlogForm = ({ toggleVisibility }) => {
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
 
-  const marginTop = {
+  const buttonStyle = {
+    marginTop: '30px',
+    display: 'block',
+  };
+
+  const inputStyle = {
+    color: '#4169E1',
     marginTop: '10px',
   };
 
@@ -40,35 +50,44 @@ const BlogForm = ({ toggleVisibility }) => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <h2>Create a new blog</h2>
+        <h3>Create a new blog</h3>
 
-        <div>
-          title &nbsp;
-          <input
-            id='title'
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author &nbsp;
-          <input
-            id='author'
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url &nbsp;
-          <input
-            id='url'
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button style={marginTop} type='submit'>
+        <InputLabel style={inputStyle} shrink htmlFor='title'>
+          title
+        </InputLabel>
+        <Input
+          id='title'
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+        ></Input>
+
+        <InputLabel style={inputStyle} shrink htmlFor='author'>
+          author
+        </InputLabel>
+        <Input
+          id='author'
+          value={author}
+          onChange={({ target }) => setAuthor(target.value)}
+        ></Input>
+
+        <InputLabel style={inputStyle} shrink htmlFor='url'>
+          url
+        </InputLabel>
+        <Input
+          id='url'
+          value={url}
+          onChange={({ target }) => setUrl(target.value)}
+        ></Input>
+
+        <Button
+          style={buttonStyle}
+          type='submit'
+          variant='contained'
+          color='primary'
+          size='small'
+        >
           save
-        </button>
+        </Button>
       </form>
     </div>
   );

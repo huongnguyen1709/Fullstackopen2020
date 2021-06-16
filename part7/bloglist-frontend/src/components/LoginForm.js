@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import InputLabel from '@material-ui/core/InputLabel';
+import Button from '@material-ui/core/Button';
+import Input from '@material-ui/core/Input';
+
 const LoginForm = ({
   handleSubmit,
   handleUsernameChange,
@@ -8,31 +12,54 @@ const LoginForm = ({
   username,
   password,
 }) => {
+  const passwordLabel = {
+    marginTop: '20px',
+    color: '#4169E1',
+  };
+
+  const color = {
+    color: '#4169E1',
+  };
+
+  const loginButton = {
+    display: 'block',
+    marginTop: '20px',
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <h1>log in to application</h1>
+        <h3>log in to application</h3>
 
-        <div>
+        <InputLabel style={color} shrink htmlFor='username'>
           username
-          <input
-            id='username'
-            value={username}
-            onChange={handleUsernameChange}
-          />
-        </div>
-        <div>
+        </InputLabel>
+        <Input
+          id='username'
+          value={username}
+          onChange={handleUsernameChange}
+        ></Input>
+
+        <InputLabel style={passwordLabel} shrink htmlFor='password'>
           password
-          <input
-            id='password'
-            type='password'
-            value={password}
-            onChange={handlePasswordChange}
-          />
-        </div>
-        <button id='login-button' type='submit'>
+        </InputLabel>
+        <Input
+          id='password'
+          type='password'
+          value={password}
+          onChange={handlePasswordChange}
+        ></Input>
+
+        <Button
+          id='login-button'
+          type='submit'
+          variant='contained'
+          color='primary'
+          size='small'
+          style={loginButton}
+        >
           login
-        </button>
+        </Button>
       </form>
     </div>
   );

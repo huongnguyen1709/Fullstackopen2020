@@ -2,6 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Switch, Route, Link, useRouteMatch } from 'react-router-dom';
 
+import { withStyles } from '@material-ui/core/styles';
+import {
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+} from '@material-ui/core';
+
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
@@ -45,20 +56,30 @@ const App = () => {
 
   const blogFormRef = useRef();
 
-  const marginLeft = {
-    marginLeft: '20px',
-  };
+  const StyledTableCell = withStyles((theme) => ({
+    head: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    body: {
+      fontSize: 14,
+    },
+  }))(TableCell);
+
+  const StyledTableRow = withStyles((theme) => ({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+      },
+    },
+  }))(TableRow);
 
   const marginTop = {
     marginTop: '20px',
   };
 
-  const boxStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
+  const linkStyle = {
+    textDecoration: 'none',
   };
 
   const handleLogin = async (event) => {
@@ -69,6 +90,8 @@ const App = () => {
         password,
       })
     );
+    setUsername('');
+    setPassword('');
   };
 
   const loginForm = () => {
@@ -96,7 +119,7 @@ const App = () => {
   );
 
   return (
-    <div style={marginLeft}>
+    <Container>
       <Menu
         loggedInUser={loggedInUser}
         handleLogout={() => dispatch(logoutUser())}
@@ -121,19 +144,27 @@ const App = () => {
             <Route path='/'>
               <div style={marginTop}>{blogForm()}</div>
 
-              <div style={marginTop}>
-                {blogs &&
-                  blogs.map((blog) => (
-                    <div key={blog.id} style={boxStyle}>
-                      <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-                    </div>
-                  ))}
-              </div>
+              <TableContainer component={Paper} style={marginTop}>
+                <Table>
+                  <TableBody>
+                    {blogs &&
+                      blogs.map((blog) => (
+                        <StyledTableRow key={blog.id}>
+                          <StyledTableCell>
+                            <Link style={linkStyle} to={`/blogs/${blog.id}`}>
+                              {blog.title}
+                            </Link>
+                          </StyledTableCell>
+                        </StyledTableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Route>
           </Switch>
         </div>
       )}
-    </div>
+    </Container>
   );
 };
 

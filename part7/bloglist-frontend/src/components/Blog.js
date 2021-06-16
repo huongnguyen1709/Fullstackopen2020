@@ -1,5 +1,18 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+  Button,
+  Input,
+  InputLabel,
+} from '@material-ui/core';
 
 import {
   addLikeBlog,
@@ -9,24 +22,26 @@ import {
 
 const Blog = ({ blog, loggedInUserID }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [comment, setComment] = useState('');
 
-  const inlineBlock = {
-    display: 'inline-block',
+  const inputStyle = {
+    color: '#4169E1',
+    marginTop: '40px',
+    fontSize: 20,
   };
 
-  const removeButtonStyle = {
-    margin: '5px',
-    backgroundColor: '#318CE7',
-    borderRadius: '5px',
-    border: 'none',
+  const buttonStyle = {
+    marginTop: '30px',
+    display: 'block',
   };
 
   const handleDelete = async () => {
     console.log(blog.id);
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       dispatch(deleteBlog(blog.id));
+      history.push('/');
     }
   };
 
@@ -36,18 +51,28 @@ const Blog = ({ blog, loggedInUserID }) => {
 
       if (loggedInUserID === blogUserID) {
         return (
-          <button style={removeButtonStyle} onClick={handleDelete}>
+          <Button
+            onClick={handleDelete}
+            variant='contained'
+            color='secondary'
+            size='small'
+          >
             remove
-          </button>
+          </Button>
         );
       }
       if (blog.user.id) {
         const blogUserID = blog.user.id;
         if (loggedInUserID === blogUserID) {
           return (
-            <button style={removeButtonStyle} onClick={handleDelete}>
+            <Button
+              onClick={handleDelete}
+              variant='contained'
+              color='secondary'
+              size='small'
+            >
               remove
-            </button>
+            </Button>
           );
         }
       }
@@ -60,28 +85,57 @@ const Blog = ({ blog, loggedInUserID }) => {
 
   return (
     <div>
-      <h2>{blog.title}</h2>
-      <div>
-        <a href={blog.url}>{blog.url}</a>
-      </div>
-      <div style={inlineBlock}>likes {blog.likes}</div>
-      &nbsp;
-      <button onClick={() => dispatch(addLikeBlog(blog))}>like</button>
-      <div>added by {blog.author}</div>
-      <h3>comments</h3>
-      <input
+      <h3>{blog.title}</h3>
+
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell>
+                <a href={blog.url}>{blog.url}</a>
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell>
+                likes {blog.likes}
+                &nbsp;
+                <button onClick={() => dispatch(addLikeBlog(blog))}>
+                  like
+                </button>
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell>added by {blog.author}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <InputLabel style={inputStyle} shrink htmlFor='comment'>
+        comments
+      </InputLabel>
+      <Input
+        id='comment'
         value={comment}
         onChange={({ target }) => setComment(target.value)}
-      />
-      <button
+      ></Input>
+
+      <Button
+        style={buttonStyle}
         type='submit'
+        variant='contained'
+        color='primary'
+        size='small'
         onClick={() => {
           dispatch(addCommentToBlog(blog, comment));
           setComment('');
         }}
       >
         add comment
-      </button>
+      </Button>
+
       <ul>
         {blog &&
           blog.comments &&
