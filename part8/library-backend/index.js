@@ -1,4 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server');
+const { v1: uuid } = require('uuid');
 
 let authors = [
   {
@@ -99,7 +100,7 @@ const typeDefs = gql`
 
   type Author {
     name: String!
-    born: Int!
+    born: Int
     bookCount: Int!
     id: ID!
   }
@@ -107,8 +108,17 @@ const typeDefs = gql`
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks(author: String, genre: String!): [Book!]!
+    allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
+  }
+
+  type Mutation {
+    addBook(
+      title: String!
+      published: Int!
+      author: String!
+      genres: [String!]!
+    ): Book
   }
 `;
 
@@ -117,15 +127,23 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: (root, args) => {
-      books = books.filter((book) => {
-        const genre = book.genres.find((genre) => genre === args.genre);
-        if (genre) {
-          return book;
+      if (args.genre || args.author) {
+        if (args.genre) {
+          const booksFilter = books.filter((book) => {
+            const genre = book.genres.find((genre) => genre === args.genre);
+            if (genre) {
+              return book;
+            }
+          });
+          if (args.author) {
+            return booksFilter.filter((book) => book.author === args.author);
+          } else return booksFilter;
+        } else {
+          return books.filter((book) => book.author === args.author);
         }
-      });
-      if (args.author) {
-        return books.filter((book) => book.author === args.author);
-      } else return books;
+      } else {
+        return books;
+      }
     },
     allAuthors: () => authors,
   },
@@ -133,6 +151,19 @@ const resolvers = {
   Author: {
     bookCount: (root) => {
       return books.filter((book) => book.author === root.name).length;
+    },
+  },
+
+  Mutation: {
+    addBook: (root, args) => {
+      const book = { ...args, id: uuid() };
+      books = books.concat(book);
+      const author = authors.find((author) => author.name === args.author);
+      if (!author) {
+        const author = { name: args.author, id: uuid() };
+        authors = authors.concat(author);
+      }
+      return book;
     },
   },
 };
