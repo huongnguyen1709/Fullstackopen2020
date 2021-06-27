@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer, UserInputError, gql } = require('apollo-server');
 const { v1: uuid } = require('uuid');
 const mongoose = require('mongoose');
 const Book = require('./models/book');
@@ -202,23 +202,34 @@ const resolvers = {
       const authorExisted = await Author.findOne({ name: args.author });
       const book = new Book({ ...args });
       if (!authorExisted) {
-        console.log('hello');
         const author = new Author({ name: args.author });
-        const savedAuthor = await author.save();
-        book.author = savedAuthor._id;
+        try {
+          const savedAuthor = await author.save();
+          book.author = savedAuthor._id;
+        } catch (error) {
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          });
+        }
       } else book.author = authorExisted._id;
 
-      await book.save();
-      const savedBook = await Book.findOne({ title: args.title }).populate(
-        'author',
-        {
-          name: 1,
-          born: 1,
-          bookCount: 1,
-          id: 1,
-        }
-      );
-      return savedBook;
+      try {
+        await book.save();
+        const savedBook = await Book.findOne({ title: args.title }).populate(
+          'author',
+          {
+            name: 1,
+            born: 1,
+            bookCount: 1,
+            id: 1,
+          }
+        );
+        return savedBook;
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        });
+      }
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({ name: args.name });
