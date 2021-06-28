@@ -208,10 +208,10 @@ const resolvers = {
 
   Mutation: {
     addBook: async (root, args, context) => {
-      const currentUser = context.currentUser;
-      if (!currentUser) {
-        throw new AuthenticationError('not authenticated');
-      }
+      // const currentUser = context.currentUser;
+      // if (!currentUser) {
+      //   throw new AuthenticationError('not authenticated');
+      // }
 
       const authorExisted = await Author.findOne({ name: args.author });
       const book = new Book({ ...args });
