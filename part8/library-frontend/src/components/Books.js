@@ -10,6 +10,8 @@ const Books = (props) => {
   }
 
   let books = [];
+  const genreButtons = [];
+
   if (result.loading) {
     return <div>loading...</div>;
   }
@@ -25,23 +27,15 @@ const Books = (props) => {
     setFilterBooks(booksFilter);
   };
 
-  const onGenresList = () => {
-    const genresList = [];
-    books.map((book) => {
-      book.genres.map((genre) => {
-        const item = genresList.find((g) => g === genre);
-        if (!item) genresList.push(genre);
-        else return null;
-      });
+  books.map((book) => {
+    return book.genres.map((genre) => {
+      const found = genreButtons.find((g) => g === genre);
+      if (!found) return genreButtons.push(genre);
+      else return null;
     });
-    return genresList.map((genre) => (
-      <button key={genre} onClick={() => showGenreBooks(genre)}>
-        {genre}
-      </button>
-    ));
-  };
+  });
 
-  const booksList = () => {
+  const bookList = () => {
     if (filterBooks) {
       return filterBooks.map((a) => (
         <tr key={a.title}>
@@ -65,6 +59,9 @@ const Books = (props) => {
     <div>
       <h2>books</h2>
 
+      <div>
+        in genre <strong>patterns</strong>
+      </div>
       <table>
         <tbody>
           <tr>
@@ -72,12 +69,16 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {booksList()}
+          {bookList()}
         </tbody>
       </table>
 
       <div>
-        {onGenresList()}
+        {genreButtons.map((genre) => (
+          <button key={genre} onClick={() => showGenreBooks(genre)}>
+            {genre}
+          </button>
+        ))}
         <button onClick={() => setFilterBooks(null)}>all genres</button>
       </div>
     </div>
