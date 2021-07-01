@@ -12,6 +12,7 @@ import {
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('user-token');
+  console.log('token in index', token);
   return {
     headers: {
       ...headers,

@@ -1,29 +1,44 @@
-import React from 'react';
-import { useQuery } from '@apollo/client';
-import { USER, ALL_BOOKS } from '../queries';
+import React, { useState, useEffect } from 'react';
+import { useLazyQuery } from '@apollo/client';
+import { ALL_BOOKS_WITH_GENRE, USER } from '../queries';
 
 const Recommend = ({ show }) => {
-  const result = useQuery(USER);
-  const allBooks = useQuery(ALL_BOOKS);
+  const [getBooks, result] = useLazyQuery(ALL_BOOKS_WITH_GENRE);
+  const [getUser, userResult] = useLazyQuery(USER);
+  let books = [];
+  let user = null;
+
+  useEffect(() => {
+    console.log('useEffect');
+
+    console.log('show');
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    console.log('useEffect-2');
+    console.log(userResult);
+    if (userResult.data && userResult.data.me) {
+      console.log('hello');
+      user = userResult.data.me;
+      getBooks({
+        variables: { genreToSearch: user.favoriteGenre },
+      });
+    }
+  }, [userResult]);
+
   if (!show) {
     return null;
   }
 
-  if (result.loading) {
-    return <div>loading...</div>;
+  // console.log(result.data.allBooks);
+
+  if (result.data) {
+    books = result.data.allBooks;
   }
 
-  const books = allBooks.data.allBooks;
-  const user = result.data.me;
-  let recommendBooks = [];
-  books.map((book) => {
-    const found = book.genres.find((g) => g === user.favoriteGenre);
-    if (found) return recommendBooks.push(book);
-    else return null;
-  });
-
-  const showRecommendation = () => {
-    if (recommendBooks.length === 0)
+  const onShowBooks = () => {
+    if (books.length === 0)
       return (
         <p>there is no recommendations according to your favorite genre</p>
       );
@@ -37,7 +52,7 @@ const Recommend = ({ show }) => {
               <th>published</th>
             </tr>
 
-            {recommendBooks.map((a) => (
+            {books.map((a) => (
               <tr key={a.title}>
                 <td>{a.title}</td>
                 <td>{a.author.name}</td>
@@ -49,6 +64,8 @@ const Recommend = ({ show }) => {
       );
   };
 
+  console.log('huong');
+
   return (
     <div>
       <h2>recommendations</h2>
@@ -56,7 +73,7 @@ const Recommend = ({ show }) => {
       <div>
         books in your favorite genre <strong>patterns</strong>
       </div>
-      {showRecommendation()}
+      {onShowBooks()}
     </div>
   );
 };
