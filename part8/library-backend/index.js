@@ -113,7 +113,7 @@ let books = [
     genres: ['classic', 'crime'],
   },
   {
-    title: 'The Demon ',
+    title: 'The Demon',
     published: 1872,
     author: 'Fyodor Dostoevsky',
     id: 'afa5de04-344d-11e9-a414-719c6709cf3e',
@@ -311,7 +311,7 @@ const server = new ApolloServer({
   playground: true,
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null;
-    console.log('auth', auth);
+
     if (auth && auth.toLowerCase().startsWith('bearer ')) {
       const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
       const currentUser = await User.findById(decodedToken.id);

@@ -9,8 +9,13 @@ const NewBook = ({ show, setPage }) => {
   const [genre, setGenre] = useState('');
   const [genres, setGenres] = useState([]);
 
+  const [errorMessage, setErrorMessage] = useState(null);
+
   const [addBook] = useMutation(ADD_BOOK, {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+    onError: (error) => {
+      setErrorMessage(error.graphQLErrors[0].message);
+    },
   });
 
   if (!show) {

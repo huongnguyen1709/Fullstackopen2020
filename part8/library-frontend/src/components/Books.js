@@ -5,16 +5,19 @@ import { ALL_BOOKS } from '../queries';
 const Books = (props) => {
   const result = useQuery(ALL_BOOKS);
   const [filterBooks, setFilterBooks] = useState(null);
+
   if (!props.show) {
     return null;
   }
 
-  let books = [];
-  const genreButtons = [];
-
   if (result.loading) {
     return <div>loading...</div>;
   }
+
+  console.log(result);
+
+  let books = [];
+  const genreButtons = [];
 
   books = result.data.allBooks;
 
