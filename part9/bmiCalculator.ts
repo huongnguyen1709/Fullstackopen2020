@@ -17,7 +17,7 @@ interface BMIValues {
     }
   }
 
-const calculateBmi = (height: number,mass: number): string => {
+export const calculateBmi = (height: number,mass: number): string => {
     const heightM = height / 100
     const result =  mass / Math.pow(heightM, 2)
     
