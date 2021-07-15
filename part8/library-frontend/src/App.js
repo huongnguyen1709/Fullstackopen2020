@@ -17,15 +17,8 @@ const App = () => {
 
   const client = useApolloClient();
 
-  useEffect(() => {
-    const token = localStorage.getItem('user-token');
-    if (token) {
-      console.log('token', token);
-      setToken(token);
-    }
-  }, [token]);
-
   const updateCacheWith = (addedBook) => {
+    window.alert(`${addedBook.title} has been added successfully`);
     const includedIn = (set, object) =>
       set.map((p) => p.id).includes(object.id);
 
@@ -41,11 +34,17 @@ const App = () => {
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
       const addedBook = subscriptionData.data.bookAdded;
-      // notify(`${addedBook.title} added`);
       updateCacheWith(addedBook);
-      console.log(subscriptionData);
     },
   });
+
+  useEffect(() => {
+    const token = localStorage.getItem('user-token');
+    if (token) {
+      console.log('token', token);
+      setToken(token);
+    }
+  }, [token]);
 
   const notify = (message) => {
     setErrorMessage(message);
@@ -84,9 +83,13 @@ const App = () => {
 
       <Books show={page === 'books'} />
 
-      <NewBook show={page === 'add'} setPage={setPage} />
+      <NewBook
+        show={page === 'add'}
+        setPage={setPage}
+        updateCacheWith={updateCacheWith}
+      />
 
-      <Recommend show={page === 'recommend'} />
+      {page === 'recommend' && <Recommend />}
 
       <LoginForm
         show={page === 'login'}

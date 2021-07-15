@@ -14,8 +14,6 @@ const Books = (props) => {
     return <div>loading...</div>;
   }
 
-  console.log(result);
-
   let books = [];
   const genreButtons = [];
 

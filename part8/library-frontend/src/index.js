@@ -47,13 +47,6 @@ const splitLink = split(
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: splitLink,
-  onError: ({ response, networkError }) => {
-    if (networkError && networkError.statusCode === 401) {
-      console.log(response); // prints 'undefined'
-      response.errors = null; // will throw 'undefined' error
-      response = { errors: null }; // will throw a 'read-only' error
-    }
-  },
 });
 
 ReactDOM.render(
