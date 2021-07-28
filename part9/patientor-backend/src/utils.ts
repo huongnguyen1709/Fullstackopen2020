@@ -11,7 +11,6 @@ const isString = (text: unknown): text is string => {
   };
 
   const isGender = (param: any): param is Gender => {
-      console.log(Object.values(Gender).includes(param))
     return Object.values(Gender).includes(param);
   };
 
@@ -42,7 +41,8 @@ const toNewPatientsEntry = ({ name, dateOfBirth, ssn, gender, occupation }: Fiel
     dateOfBirth: parseDate(dateOfBirth),
     ssn: parseData(ssn),
     gender: parseGender(gender),
-    occupation: parseData(occupation)
+    occupation: parseData(occupation),
+    entries: []
   }
 
   return newEntry;
