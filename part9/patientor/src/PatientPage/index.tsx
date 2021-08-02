@@ -45,6 +45,21 @@ const PatientPage = () => {
 
       <div>ssn: {patient && patient.ssn ? patient.ssn : null}</div>
       <div>occupation: {patient && patient.occupation}</div>
+
+      <Header as='h3'>entries</Header>
+
+      {patient &&
+        patient.entries.map((e) => (
+          <div key={e.id}>
+            <div>
+              {e.date} {e.description}
+            </div>
+            <ul>
+              {e.diagnosisCodes &&
+                e.diagnosisCodes.map((c) => <li key={c}>{c}</li>)}
+            </ul>
+          </div>
+        ))}
     </div>
   );
 };

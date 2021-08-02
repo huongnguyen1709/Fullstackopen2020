@@ -33,7 +33,6 @@ const getNonSensitiveEntries = (): PublicPatient[] => {
   };
 
   const getPatient = (id: string): Patient | undefined => {
-    console.log(patientsEntries)
     const patient = patientsEntries.find(p => p.id === id)
     return patient;
   };
