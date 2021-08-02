@@ -8,6 +8,7 @@ import { apiBaseUrl } from '../constants';
 import { setPatient, setDiagnosesList } from '../state/reducer';
 
 import { Header, Icon } from 'semantic-ui-react';
+import EntryDetails from '../Entries/EntryDetails';
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -59,6 +60,8 @@ const PatientPage = () => {
       <div>occupation: {patient && patient.occupation}</div>
 
       <Header as='h3'>entries</Header>
+
+      <EntryDetails entries={patient && patient.entries} />
 
       {patient &&
         patient.entries.map((e) => (
