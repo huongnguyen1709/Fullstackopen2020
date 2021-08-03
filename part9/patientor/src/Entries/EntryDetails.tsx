@@ -8,17 +8,22 @@ const EntryDetails = ({ entries }: { entries: Entry[] | undefined }) => {
   return (
     <>
       {entries &&
-        entries.map((e) => {
+        entries.map((e, index) => {
           let component;
           switch (e.type) {
             case 'Hospital':
               return (
-                <HospitalEntry date={e.date} description={e.description} />
+                <HospitalEntry
+                  key={index}
+                  date={e.date}
+                  description={e.description}
+                />
               );
 
             case 'OccupationalHealthcare':
               return (
                 <OccupationalEntry
+                  key={index}
                   date={e.date}
                   name={e.employerName}
                   description={e.description}
@@ -28,6 +33,7 @@ const EntryDetails = ({ entries }: { entries: Entry[] | undefined }) => {
             case 'HealthCheck':
               return (
                 <HealthCheckEntry
+                  key={index}
                   date={e.date}
                   description={e.description}
                   healthCheckRating={e.healthCheckRating}

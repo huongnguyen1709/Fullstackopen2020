@@ -19,14 +19,14 @@ interface BaseEntry {
   diagnosisCodes?: Array<Diagnosis['code']>;
 }
 
-interface SickLeave {
+export interface SickLeave {
   startDate: string,
   endDate: string,
 }
 
-interface Discharge {
+export interface Discharge {
   date: string,
-    criteria: string,
+  criteria: string,
 }
 
 export enum HealthCheckRating {
@@ -71,5 +71,6 @@ export interface Patient {
   
 export type PublicPatient = Omit<Patient, 'ssn' | 'entries' >
 // export type NonSensitivePatientsEntry = Omit<PatientsEntry, 'ssn'>
-export type NewPatientsEntry = Omit<Patient, 'id'>;
+export type NewPatient = Omit<Patient, 'id'>;
+export type NewEntry = Omit<Entry, 'id'>;
 

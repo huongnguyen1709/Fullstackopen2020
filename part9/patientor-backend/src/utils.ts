@@ -1,6 +1,8 @@
-import { Gender, NewPatientsEntry, Entry } from './types';
+import { Gender, NewPatient,NewEntry, Entry, Diagnosis, Discharge, SickLeave, HealthCheckRating} from './types';
+import {v1 as uuid} from 'uuid';
 
 type Fields = { name : unknown, dateOfBirth: unknown, ssn: unknown, gender: unknown, occupation: unknown, entries?: Entry[]};
+type EntryFields = { description : unknown, date: unknown, specialist: unknown, diagnosisCodes?: unknown, type: unknown, discharge: Discharge, employerName: unknown, sickLeave?: SickLeave, healthCheckRating: unknown};
 
 const isString = (text: unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
@@ -12,6 +14,11 @@ const isString = (text: unknown): text is string => {
 
   const isGender = (param: any): param is Gender => {
     return Object.values(Gender).includes(param);
+  };
+
+
+  const isDiagnosisCodes = (param: any): param is Array<Diagnosis['code']> => {
+    return param
   };
 
   const parseData = (data: unknown): string => {
@@ -35,9 +42,40 @@ const isString = (text: unknown): text is string => {
     return gender;
   };
 
+  const parseDiagnosisCodes = (diagnosisCodes: unknown): Array<Diagnosis['code']> => {
+    if (diagnosisCodes || !isDiagnosisCodes(diagnosisCodes)) {
+        throw new Error('Incorrect Diagnosis Codes: ' + diagnosisCodes);
+    }
+    return diagnosisCodes;
+  };
 
-const toNewPatientsEntry = ({ name, dateOfBirth, ssn, gender, occupation, entries }: Fields): NewPatientsEntry => {
-  const newEntry: NewPatientsEntry = {
+  type Entrytype = 'Hospital' | 'HealthCheck' | 'OccupationalHealthcare'
+  const isType = (param: any): param is Entrytype => {
+    return param
+  };
+
+  const isHealthCheckRating = (param: any): param is HealthCheckRating => {
+    return param
+  };
+
+
+  const parseType = (type: unknown): Entrytype => {
+    if (!type || !isType(type)) {
+        throw new Error('Incorrect or missing type: ' + type);
+    }
+    return type
+  };
+
+  const parseHealthCheckRating = (healthCheckRating: unknown): HealthCheckRating => {
+    if (!healthCheckRating || !isHealthCheckRating(healthCheckRating)) {
+        throw new Error('Incorrect Diagnosis Codes: ' + healthCheckRating);
+    }
+    return healthCheckRating;
+  };
+
+
+export const toNewPatientsEntry = ({ name, dateOfBirth, ssn, gender, occupation, entries }: Fields): NewPatient => {
+  const newPatient: NewPatient = {
     name: parseData(name),
     dateOfBirth: parseDate(dateOfBirth),
     ssn: parseData(ssn),
@@ -46,7 +84,46 @@ const toNewPatientsEntry = ({ name, dateOfBirth, ssn, gender, occupation, entrie
     entries: entries
   }
 
-  return newEntry;
+  return newPatient;
 }
 
-export default toNewPatientsEntry;
+export const toNewEntry = ({ description, date, specialist, diagnosisCodes, type, discharge, employerName, sickLeave, healthCheckRating }: EntryFields): Entry => {
+  const newEntryBase : Entry = {
+    description: parseData(description),
+    date: parseDate(date),
+    specialist: parseData(specialist),
+    diagnosisCodes: parseDiagnosisCodes(diagnosisCodes),
+    type: parseType(type)
+  }
+  
+  let newEntryData: NewEntry
+
+  switch (newEntryBase.type) {
+    case 'Hospital':
+      newEntryData = {
+        ...newEntryBase,
+        type:'Hospital',
+        discharge
+      }
+      break;
+    case 'OccupationalHealthcare':
+      newEntryData = {
+        ...newEntryBase,
+        type:'OccupationalHealthcare',
+        employerName: parseDate(employerName),
+        sickLeave
+      }
+     break;
+    case 'HealthCheck':
+      newEntryData = {
+        ...newEntryBase,
+        type:'HealthCheck',
+        healthCheckRating: parseHealthCheckRating(healthCheckRating)
+      }
+   break;
+    default:
+      break;
+  }
+
+  return newEntryData;
+}
