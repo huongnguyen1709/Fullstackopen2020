@@ -1,6 +1,6 @@
 import patientsData from '../../data/patients';
 import {v1 as uuid} from 'uuid';
-import { PublicPatient, NewPatient, Patient , Entry } from '../types';
+import { PublicPatient, NewPatient, Patient , Entry, NewEntry } from '../types';
 import {toNewPatientsEntry} from "../utils";
 
 const patients: Patient[] = patientsData.map(obj => {
@@ -38,7 +38,11 @@ const getNonSensitiveEntries = (): PublicPatient[] => {
   };
 
   
-  const addEntry = (patientId:string, newEntry: Entry): Entry => {
+  const addEntry = (patientId:string, data: NewEntry): Entry => {
+    const newEntry : Entry = {
+      id: uuid(),
+      ...data
+    } as Entry
   const patient : Patient | undefined = patients.find(p => p.id === patientId)
   if(patient && patient.entries) patient.entries.push(newEntry);
   
