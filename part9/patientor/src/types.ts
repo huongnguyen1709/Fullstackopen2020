@@ -47,7 +47,7 @@ interface HospitalEntry extends BaseEntry {
   discharge:Discharge
 }
 
-interface HealthCheckEntry extends BaseEntry {
+export interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
   healthCheckRating: HealthCheckRating;
 }

@@ -24,9 +24,9 @@ const HealthCheckEntry = ({
         <Icon
           name='heart'
           color={
-            healthCheckRating === 0
+            healthCheckRating == 0
               ? 'green'
-              : healthCheckRating === 1
+              : healthCheckRating == 1
               ? 'yellow'
               : 'red'
           }

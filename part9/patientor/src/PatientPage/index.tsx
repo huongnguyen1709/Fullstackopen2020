@@ -7,13 +7,25 @@ import { apiBaseUrl } from '../constants';
 
 import { setPatient, setDiagnosesList } from '../state/reducer';
 
-import { Header, Icon } from 'semantic-ui-react';
+import { Header, Icon, Button } from 'semantic-ui-react';
+
 import EntryDetails from '../Entries/EntryDetails';
+import { NewHealthCheckEntry } from '../AddEntryModal/AddEntryForm';
+import AddEntryModal from '../AddEntryModal';
+import { HealthCheckEntry } from '../types';
 
 const PatientPage = () => {
   const { id } = useParams<{ id: string }>();
   const [{ fetchPatient, diagnoses }, dispatch] = useStateValue();
+
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   let patient: Patient | undefined;
+
+  const openModal = (): void => setModalOpen(true);
+  const [error, setError] = React.useState<string | undefined>();
+  const closeModal = (): void => {
+    setModalOpen(false);
+  };
 
   useEffect(() => {
     patient = fetchPatient.find((patient) => patient.id === id);
@@ -44,6 +56,20 @@ const PatientPage = () => {
     }
   });
   patient = fetchPatient.find((patient) => patient.id === id);
+
+  const submitNewEntry = async (values: NewHealthCheckEntry) => {
+    try {
+      const { data: newEntry } = await axios.post<HealthCheckEntry>(
+        `${apiBaseUrl}/patients/${id}/entries`,
+        { ...values, type: 'HealthCheck' }
+      );
+      dispatch({ type: 'ADD_ENTRY', payload: { id, values: newEntry } });
+      closeModal();
+    } catch (e) {
+      console.error(e.response?.data || 'Unknown Error');
+      setError(e.response?.data?.error || 'Unknown error');
+    }
+  };
 
   return (
     <div>
@@ -79,6 +105,15 @@ const PatientPage = () => {
             </ul>
           </div>
         ))}
+
+      <AddEntryModal
+        modalOpen={modalOpen}
+        onSubmit={submitNewEntry}
+        error={error}
+        onClose={closeModal}
+      />
+
+      <Button onClick={() => openModal()}>Add New Entry</Button>
     </div>
   );
 };

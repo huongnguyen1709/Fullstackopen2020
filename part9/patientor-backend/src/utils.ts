@@ -147,7 +147,8 @@ const isString = (text: unknown): text is string => {
   };
 
   const isHealthCheckRating = (param: any): param is HealthCheckRating => {
-    return Object.values(HealthCheckRating).includes(param);
+   
+    return Object.values(HealthCheckRating).includes(parseInt(param));
   };
 
 
@@ -160,6 +161,7 @@ const isString = (text: unknown): text is string => {
 
   const parseHealthCheckRating = (healthCheckRating: unknown): HealthCheckRating => {
     if (healthCheckRating === undefined || !isHealthCheckRating(healthCheckRating)) {
+      console.log(isHealthCheckRating(healthCheckRating))
         throw new Error('Incorrect health check rating: ' + healthCheckRating);
     }
     return healthCheckRating;
